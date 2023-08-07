@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Display</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        #data-display {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="data-display">
+        <div id="time">Time: Loading...</div>
+        <div id="temperature">Temperature: Loading...</div>
+        <div id="aqi">AQI: Loading...</div>
+    </div>
+
+    <script>
+        fetch('/api/data')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('time').textContent = `Time: ${data.time}`;
+                document.getElementById('temperature').textContent = `Temperature: ${data.temperature}`;
+                document.getElementById('aqi').textContent = `AQI: ${data.aqi}`;
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    </script>
+</body>
+</html>
