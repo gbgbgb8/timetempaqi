@@ -52,7 +52,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-color: rgba(0, 0, 0, 0.9);
+            background-color: rgba(50, 50, 50, 0.95);
             z-index: 10;
             display: none;
             flex-direction: column;
@@ -60,12 +60,14 @@
             justify-content: center;
         }
 
+        .config-label,
         .config-input,
         .config-select {
             margin: 10px;
             padding: 5px;
             font-size: 1.5em;
             width: 80%;
+            text-align: center;
         }
 
         .config-button {
@@ -73,6 +75,15 @@
             padding: 10px 20px;
             font-size: 1.5em;
             cursor: pointer;
+            background-color: #444;
+            border: 1px solid #777;
+            color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .config-button:hover {
+            background-color: #555;
         }
 
         /* File input styling */
@@ -85,8 +96,15 @@
             padding: 10px 20px;
             font-size: 1.5em;
             cursor: pointer;
-            background-color: white;
-            color: black;
+            background-color: #444;
+            color: white;
+            border: 1px solid #777;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .file-label:hover {
+            background-color: #555;
         }
 
         .color-label {
@@ -105,15 +123,14 @@
 
     <!-- Configuration overlay -->
     <div class="config-overlay" id="configOverlay">
-        <label class="color-label" for="textColor">Text Color:</label>
+        <label class="config-label" for="textColor">Text Color:</label>
         <input type="color" id="textColor" class="config-input">
         <br>
-        <label class="color-label" for="bgColor">Background Color:</label>
+        <label class="config-label" for="bgColor">Background Color:</label>
         <input type="color" id="bgColor" class="config-input">
         <br>
-        
-        <label for="timeZone">Time Zone:</label>
-        <select id="timeZone" class="config-input">
+        <label class="config-label" for="timeZone">Time Zone:</label>
+        <select id="timeZone" class="config-select">
             <option value="America/New_York">Eastern Time</option>
             <option value="America/Chicago">Central Time</option>
             <option value="America/Denver">Mountain Time</option>
@@ -121,8 +138,6 @@
             <option value="America/Anchorage">Alaska Time</option>
             <option value="Pacific/Honolulu">Hawaii Time</option>
         </select>
-        
-        
         <input type="text" id="weatherStation" class="config-input" placeholder="WeatherUnderground Station ID">
         <input type="text" id="airnowRSS" class="config-input" placeholder="AirNow RSS link">
 
