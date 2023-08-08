@@ -29,8 +29,8 @@
             width: 100%;
             margin: 0;
             padding: 0;
-            line-height: 0.8; /* Reduced line height to make text bigger and more compact */
-            font-size: 40vw; /* Bigger font size */
+            line-height: 0.8;
+            font-size: 40vw; /* Uniform font size for time and temperature */
         }
 
         #aqi-value {
@@ -56,7 +56,7 @@
             document.getElementById('temperature').textContent = `${data.temperature}°`;
             const [aqiValue, aqiCategory] = data.aqi.split(' - ');
             document.getElementById('aqi-value').textContent = aqiValue;
-            document.getElementById('aqi-category').textContent = `${aqiCategory}`;
+            document.getElementById('aqi-category').textContent = `${aqiCategory} AQI`;
         }
 
         function getCurrentTime() {
