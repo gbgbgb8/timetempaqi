@@ -57,7 +57,12 @@ async function fetchAirNowAQIData() {
 
 function getCurrentTime() {
     const now = new Date();
-    const hour = now.getHours();
-    const minute = now.getMinutes().toString().padStart(2, '0');
-    return `${hour}:${minute}`;
+    const formatted = new Intl.DateTimeFormat('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'America/Los_Angeles'
+    }).format(now);
+
+    return formatted;
 }
+
