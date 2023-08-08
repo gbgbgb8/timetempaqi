@@ -58,15 +58,17 @@ async function fetchAirNowAQIData() {
 function getCurrentTime() {
     const now = new Date();
     const options = {
-        hour: 'numeric', // 12-hour time without leading zero
-        minute: '2-digit', // Always 2 digits for minutes
-        hour12: true, // 12-hour time format
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
         timeZone: 'America/Los_Angeles' // Pacific Standard Time
     };
-    const formatted = new Intl.DateTimeFormat('en-US', options).format(now);
+    let formatted = new Intl.DateTimeFormat('en-US', options).format(now);
     
-    // Remove leading zero if exists
+    // Remove the AM/PM part and leading zero, if any
+    formatted = formatted.replace(/ AM| PM/g, '').trim();
     return formatted.startsWith('0') ? formatted.slice(1) : formatted;
 }
+
 
 
