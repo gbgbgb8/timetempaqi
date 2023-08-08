@@ -67,11 +67,8 @@
             width: 80%;
         }
 
-        .config-button {
-            margin: 10px;
-            padding: 10px 20px;
-            font-size: 1.5em;
-            cursor: pointer;
+        .config-button:not(:last-child) {
+            margin-right: 10px;
         }
 
         /* File input styling */
@@ -87,11 +84,6 @@
             background-color: white;
             color: black;
         }
-
-        /* Added styles for better visibility of color picker on some browsers */
-        .config-input[type="color"] {
-            border: 2px solid white;
-        }
     </style>
 </head>
 
@@ -105,17 +97,22 @@
 
     <!-- Configuration overlay -->
     <div class="config-overlay" id="configOverlay">
-        <input type="color" id="textColor" class="config-input" value="#FFFFFF"> <!-- Default to White -->
-        <input type="color" id="bgColor" class="config-input" value="#000000"> <!-- Default to Black -->
+        <input type="color" id="textColor" class="config-input">
+        <input type="color" id="bgColor" class="config-input">
         <input type="text" id="timeZone" class="config-input" placeholder="TimeZone:">
         <input type="text" id="weatherStation" class="config-input" placeholder="WeatherUnderground Station ID">
         <input type="text" id="airnowRSS" class="config-input" placeholder="AirNow RSS link">
 
         <!-- File input for loading configuration -->
         <input type="file" id="loadConfigFile" class="file-input">
-        <label for="loadConfigFile" class="file-label">Load Config</label>
+        <label for="loadConfigFile" class="file-label">Load from file</label>
 
-        <button class="config-button" onclick="saveConfig()">Save & Reload</button>
+        <div>
+            <button class="config-button" onclick="applyConfig()">OK</button>
+            <button class="config-button" onclick="hideConfigOverlay()">Cancel</button>
+            <button class="config-button" onclick="saveConfigToFile()">Save to file</button>
+            <button class="config-button" onclick="restoreDefaults()">Restore defaults</button>
+        </div>
     </div>
 
     <script>
@@ -185,12 +182,17 @@
         }
 
         function populateConfigValues() {
-            // Populate with current values
             document.getElementById('textColor').value = window.getComputedStyle(document.body).color;
             document.getElementById('bgColor').value = window.getComputedStyle(document.body).backgroundColor;
         }
 
-        function saveConfig() {
+        function applyConfig() {
+            document.body.style.color = document.getElementById('textColor').value;
+            document.body.style.backgroundColor = document.getElementById('bgColor').value;
+            hideConfigOverlay();
+        }
+
+        function saveConfigToFile() {
             const config = {
                 textColor: document.getElementById('textColor').value,
                 bgColor: document.getElementById('bgColor').value,
@@ -199,11 +201,6 @@
                 airnowRSS: document.getElementById('airnowRSS').value
             };
 
-            // Update body styles
-            document.body.style.color = config.textColor;
-            document.body.style.backgroundColor = config.bgColor;
-
-            // Logic to save the configuration as a downloadable file
             const blob = new Blob([JSON.stringify(config)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -213,8 +210,18 @@
             document.body.appendChild(a);
             a.click();
             URL.revokeObjectURL(url);
+        }
 
+        function hideConfigOverlay() {
             document.getElementById('configOverlay').style.display = 'none';
+        }
+
+        function restoreDefaults() {
+            document.getElementById('textColor').value = "#FFFFFF";
+            document.getElementById('bgColor').value = "#000000";
+            document.getElementById('timeZone').value = "America/Los_Angeles";
+            document.getElementById('weatherStation').value = "";
+            document.getElementById('airnowRSS').value = "";
         }
 
         document.getElementById('loadConfigFile').addEventListener('change', function() {
