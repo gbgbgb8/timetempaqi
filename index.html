@@ -52,7 +52,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-color: rgba(255, 255, 255, 0.8); /* Changed to give a shaded window effect */
+            background-color: rgba(127, 127, 127, 0.8); /* semi-transparent gray */
             z-index: 10;
             display: none;
             flex-direction: column;
@@ -60,16 +60,18 @@
             justify-content: center;
         }
 
-        .config-input {
+        .config-input, .config-select {
             margin: 10px;
             padding: 5px;
             font-size: 1.5em;
             width: 80%;
-            background-color: #eee;  /* Enhance visibility */
         }
 
-        .config-button:not(:last-child) {
-            margin-right: 10px;
+        .config-button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 1.5em;
+            cursor: pointer;
         }
 
         /* File input styling */
@@ -82,14 +84,13 @@
             padding: 10px 20px;
             font-size: 1.5em;
             cursor: pointer;
-            background-color: black;  /* Enhance visibility */
-            color: white;
+            background-color: white;
+            color: black;
         }
     </style>
 </head>
 
 <body>
-    <!-- Main Display Elements -->
     <div id="time" class="data-display"></div>
     <div id="temperature" class="data-display"></div>
     <div id="aqi" class="data-display">
@@ -101,33 +102,31 @@
     <div class="config-overlay" id="configOverlay">
         <label for="textColor">Text Color:</label>
         <input type="color" id="textColor" class="config-input">
+
         <label for="bgColor">Background Color:</label>
         <input type="color" id="bgColor" class="config-input">
+
         <label for="timeZone">Time Zone:</label>
-    <select id="timeZone" class="config-input">
-        <option value="America/New_York">Eastern Time</option>
-        <option value="America/Chicago">Central Time</option>
-        <option value="America/Denver">Mountain Time</option>
-        <option value="America/Phoenix">Mountain Standard Time</option>
-        <option value="America/Los_Angeles">Pacific Time</option>
-        <option value="America/Anchorage">Alaska Time</option>
-        <option value="Pacific/Honolulu">Hawaii-Aleutian Time</option>
-    </select>
-<label for="weatherStation">Wunderground Station ID</label>
-        <input type="text" id="weatherStation" class="config-input" placeholder="KCANAPA281">
-        <label for="airnowRSS">AirNow ZIP code</label>
-        <input type="text" id="airnowRSS" class="config-input" placeholder="94559">
+        <select id="timeZone" class="config-select">
+            <option value="America/New_York">Eastern Time</option>
+            <option value="America/Chicago">Central Time</option>
+            <option value="America/Denver">Mountain Time</option>
+            <option value="America/Phoenix">Mountain Standard Time</option>
+            <option value="America/Los_Angeles">Pacific Time</option>
+            <option value="America/Anchorage">Alaska Time</option>
+            <option value="Pacific/Honolulu">Hawaii-Aleutian Time</option>
+        </select>
 
-        <!-- File input for loading configuration -->
+        <input type="text" id="weatherStation" class="config-input" placeholder="WeatherUnderground Station ID">
+        <input type="text" id="airnowRSS" class="config-input" placeholder="AirNow RSS link">
+
         <input type="file" id="loadConfigFile" class="file-input">
-        <label for="loadConfigFile" class="file-label">Load from file</label>
+        <label for="loadConfigFile" class="file-label">Load Config</label>
 
-        <div>
-            <button class="config-button" onclick="applyConfig()">OK</button>
-            <button class="config-button" onclick="hideConfigOverlay()">Cancel</button>
-            <button class="config-button" onclick="saveConfigToFile()">Save to file</button>
-            <button class="config-button" onclick="restoreDefaults()">Restore defaults</button>
-        </div>
+        <button class="config-button" onclick="saveConfigToFile()">Save to File</button>
+        <button class="config-button" onclick="restoreDefaults()">Restore Defaults</button>
+        <button class="config-button" onclick="saveAndApplyConfig()">OK</button>
+        <button class="config-button" onclick="cancelConfig()">Cancel</button>
     </div>
 
     <script>
@@ -144,7 +143,7 @@
                 hour: 'numeric',
                 minute: '2-digit',
                 hour12: true,
-                timeZone: 'America/Los_Angeles'
+                timeZone: 'America/Los_Angeles'  // This will be dynamic based on user's choice
             };
             let formatted = new Intl.DateTimeFormat('en-US', options).format(now);
             formatted = formatted.replace(/ AM| PM/g, '').trim();
@@ -191,14 +190,7 @@
             setInterval(fetchData, 60000);
         };
 
-        function applyConfig() {
-            document.body.style.color = document.getElementById('textColor').value;
-            document.body.style.backgroundColor = document.getElementById('bgColor').value;
-            hideConfigOverlay();
-        }
-
         function showConfigOverlay() {
-            populateConfigValues();
             document.getElementById('configOverlay').style.display = 'flex';
         }
 
@@ -206,15 +198,10 @@
             document.getElementById('configOverlay').style.display = 'none';
         }
 
-        function populateConfigValues() {
-            document.getElementById('textColor').value = window.getComputedStyle(document.body).color;
-            document.getElementById('bgColor').value = window.getComputedStyle(document.body).backgroundColor;
-        }
-
         function saveConfigToFile() {
             const config = {
-                textColor: document.getElementById('textColor').value,
-                bgColor: document.getElementById('bgColor').value,
+                textColor: document.getElementById('textColor').value || '#FFFFFF',
+                bgColor: document.getElementById('bgColor').value || '#000000',
                 timeZone: document.getElementById('timeZone').value,
                 weatherStation: document.getElementById('weatherStation').value,
                 airnowRSS: document.getElementById('airnowRSS').value
@@ -232,27 +219,45 @@
             URL.revokeObjectURL(url);
         }
 
+        document.getElementById('loadConfigFile').addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const config = JSON.parse(e.target.result);
+                    document.getElementById('textColor').value = config.textColor || '#FFFFFF';
+                    document.getElementById('bgColor').value = config.bgColor || '#000000';
+                    document.getElementById('timeZone').value = config.timeZone || 'America/Los_Angeles';
+                    document.getElementById('weatherStation').value = config.weatherStation || '';
+                    document.getElementById('airnowRSS').value = config.airnowRSS || '';
+                };
+                reader.readAsText(file);
+            }
+        });
+
         function restoreDefaults() {
-            document.getElementById('textColor').value = '#FFFFFF'; // Default white
-            document.getElementById('bgColor').value = '#000000'; // Default black
-            // Add other defaults as needed
+            document.getElementById('textColor').value = '#FFFFFF';
+            document.getElementById('bgColor').value = '#000000';
+            document.getElementById('timeZone').value = 'America/Los_Angeles';
+            document.getElementById('weatherStation').value = '';
+            document.getElementById('airnowRSS').value = '';
+        }
+
+        function saveAndApplyConfig() {
+            // Apply changes
+            document.body.style.color = document.getElementById('textColor').value || '#FFFFFF';
+            document.body.style.backgroundColor = document.getElementById('bgColor').value || '#000000';
+            
+            // Hide overlay after applying changes
+            hideConfigOverlay();
+        }
+
+        function cancelConfig() {
+            hideConfigOverlay();
         }
 
         // Event listener to show the configuration overlay on click
-        document.body.addEventListener('click', function(event) {
-            if (event.target.id !== 'configOverlay' && !event.target.closest('#configOverlay')) {
-                showConfigOverlay();
-            }
-        });
-        
-        document.getElementById('textColor').addEventListener('input', function() {
-    this.style.backgroundColor = this.value;
-});
-
-document.getElementById('bgColor').addEventListener('input', function() {
-    this.style.backgroundColor = this.value;
-});
-
+        document.body.addEventListener('click', showConfigOverlay);
 
     </script>
 </body>

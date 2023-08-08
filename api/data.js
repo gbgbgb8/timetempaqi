@@ -45,6 +45,8 @@ async function fetchAirNowAQIData() {
 
     const data = await response.json();
 
+    console.log('AirNow API Response:', data);  // Log the response for debugging
+
     // Extract AQI and the category name from the response
     if (data && data.length > 0) {
         const { AQI, Category } = data[0];
@@ -54,13 +56,12 @@ async function fetchAirNowAQIData() {
 }
 
 function getCurrentTime() {
-    const selectedTimeZone = document.getElementById('timeZone').value;
     const now = new Date();
     const options = {
         hour: 'numeric',
         minute: '2-digit',
         hour12: true,
-        timeZone: selectedTimeZone // use selected timezone
+        timeZone: 'America/Los_Angeles' // Pacific Standard Time
     };
     let formatted = new Intl.DateTimeFormat('en-US', options).format(now);
     
