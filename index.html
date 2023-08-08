@@ -25,12 +25,17 @@
             font-size: calc(25vw + 25vh); /* max font size */
             margin: 0;
             padding: 0;
-            line-height: 0.9; /* adjust line height to fill screen */
+            line-height: 1;
             width: 100%;
         }
 
         #aqi {
             font-size: calc(8vw + 8vh);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
         }
 
         #aqi-value {
@@ -90,7 +95,7 @@
                 currentDisplay = 'time';
             }
 
-            document.getElementById(currentDisplay).style.display = 'flex';
+            document.getElementById(currentDisplay).style.display = 'block';
         }
 
         window.onload = function() {
