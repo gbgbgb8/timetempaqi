@@ -25,17 +25,12 @@
             font-size: calc(25vw + 25vh); /* max font size */
             margin: 0;
             padding: 0;
-            line-height: 1;
+            line-height: 0.9; /* adjust line height to fill screen */
             width: 100%;
         }
 
         #aqi {
             font-size: calc(8vw + 8vh);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
         }
 
         #aqi-value {
@@ -59,11 +54,25 @@
 
     <script>
         function updateDOM(data) {
-            document.getElementById('time').textContent = data.time;
             document.getElementById('temperature').textContent = `${data.temperature}°F`;
             const [aqiValue, aqiCategory] = data.aqi.split(' - ');
             document.getElementById('aqi-value').textContent = aqiValue;
             document.getElementById('aqi-category').textContent = aqiCategory;
+        }
+
+        function getCurrentTime() {
+            const now = new Date();
+            const options = {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true,
+                timeZone: 'America/Los_Angeles' // Pacific Standard Time
+            };
+            let formatted = new Intl.DateTimeFormat('en-US', options).format(now);
+            
+            // Remove the AM/PM part and leading zero, if any
+            formatted = formatted.replace(/ AM| PM/g, '').trim();
+            return formatted.startsWith('0') ? formatted.slice(1) : formatted;
         }
 
         function fetchData() {
@@ -93,6 +102,11 @@
                 currentDisplay = 'aqi';
             } else {
                 currentDisplay = 'time';
+            }
+
+            // If time is the next display, update it with the current time
+            if (currentDisplay === 'time') {
+                document.getElementById('time').textContent = getCurrentTime();
             }
 
             document.getElementById(currentDisplay).style.display = 'block';
