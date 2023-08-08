@@ -22,22 +22,9 @@
         .data-display {
             text-align: center;
             display: none; /* hide by default */
-            font-size: calc(20vw + 20vh); /* max font size */
+            width: 100%;
             margin: 0;
             padding: 0;
-            line-height: 0.9; /* adjust line height to fill screen */
-        }
-
-        #aqi {
-            font-size: calc(8vw + 8vh);
-        }
-
-        #aqi-value {
-            font-size: calc(20vw + 20vh); 
-        }
-
-        #aqi-category {
-            font-size: calc(10vw + 10vh);
         }
     </style>
 </head>
@@ -52,6 +39,17 @@
     </div>
 
     <script>
+        function adjustFontSize(element) {
+            const maxFontSize = 500; // Start with a large font size
+            element.style.fontSize = maxFontSize + "px";
+
+            // Decrease font size until the text fits the container width
+            while (element.scrollWidth > element.offsetWidth) {
+                const currentSize = parseFloat(window.getComputedStyle(element, null).getPropertyValue('font-size'));
+                element.style.fontSize = (currentSize - 1) + "px";
+            }
+        }
+
         function fetchData() {
             fetch('/api/data')
                 .then(response => {
@@ -62,7 +60,11 @@
                 })
                 .then(data => {
                     document.getElementById('time').textContent = data.time;
+                    adjustFontSize(document.getElementById('time'));
+                    
                     document.getElementById('temperature').textContent = `${data.temperature}°F`;
+                    adjustFontSize(document.getElementById('temperature'));
+                    
                     const [aqiValue, aqiCategory] = data.aqi.split(' - ');
                     document.getElementById('aqi-value').textContent = aqiValue;
                     document.getElementById('aqi-category').textContent = aqiCategory;
