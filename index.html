@@ -13,6 +13,8 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            width: 100vw;
+            margin: 0;
             font-family: Arial, sans-serif;
             overflow: hidden; /* hide any overflow */
         }
@@ -20,11 +22,21 @@
         .data-display {
             text-align: center;
             display: none; /* hide by default */
-            font-size: 20vw; /* dynamically adjust font size based on viewport width */
+            font-size: calc(15vw + 15vh); /* dynamically adjust font size based on viewport */
+            margin: 0;
+            padding: 0;
+        }
+
+        #aqi {
+            font-size: calc(10vw + 10vh);
         }
 
         #aqi-value {
-            font-size: 18vw; /* slightly smaller font size for the AQI value */
+            font-size: calc(15vw + 15vh); 
+        }
+
+        #aqi-category {
+            font-size: calc(8vw + 8vh);
         }
     </style>
 </head>
@@ -33,7 +45,7 @@
     <div id="time" class="data-display"></div>
     <div id="temperature" class="data-display"></div>
     <div id="aqi" class="data-display">
-        AirNow AQI
+        <div>AirNow AQI</div>
         <div id="aqi-value"></div>
         <div id="aqi-category"></div>
     </div>
