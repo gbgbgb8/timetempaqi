@@ -87,6 +87,11 @@
             background-color: white;
             color: black;
         }
+
+        /* Added styles for better visibility of color picker on some browsers */
+        .config-input[type="color"] {
+            border: 2px solid white;
+        }
     </style>
 </head>
 
@@ -100,8 +105,8 @@
 
     <!-- Configuration overlay -->
     <div class="config-overlay" id="configOverlay">
-        <input type="text" id="textColor" class="config-input" placeholder="Text color: White">
-        <input type="text" id="bgColor" class="config-input" placeholder="Background color: Black">
+        <input type="color" id="textColor" class="config-input" value="#FFFFFF"> <!-- Default to White -->
+        <input type="color" id="bgColor" class="config-input" value="#000000"> <!-- Default to Black -->
         <input type="text" id="timeZone" class="config-input" placeholder="TimeZone:">
         <input type="text" id="weatherStation" class="config-input" placeholder="WeatherUnderground Station ID">
         <input type="text" id="airnowRSS" class="config-input" placeholder="AirNow RSS link">
@@ -111,7 +116,6 @@
         <label for="loadConfigFile" class="file-label">Load Config</label>
 
         <button class="config-button" onclick="saveConfig()">Save & Reload</button>
-        <button class="config-button" onclick="hideConfigOverlay()">Close Without Saving</button>
     </div>
 
     <script>
@@ -175,26 +179,15 @@
             setInterval(fetchData, 60000);
         };
 
-        document.body.addEventListener('click', function(event) {
-            if (event.target.id !== 'configOverlay' && !event.target.classList.contains('config-input') && !event.target.classList.contains('config-button') && !event.target.classList.contains('file-label')) {
-                showConfigOverlay();
-            }
-        });
-
         function showConfigOverlay() {
             populateConfigValues();
             document.getElementById('configOverlay').style.display = 'flex';
         }
 
-        function hideConfigOverlay() {
-            document.getElementById('configOverlay').style.display = 'none';
-        }
-
         function populateConfigValues() {
-            // Here you can populate the fields with the current values, for this example, I'm just populating with default values.
-            document.getElementById('textColor').value = "White";
-            document.getElementById('bgColor').value = "Black";
-            // Add other default values or fetch from a source to populate.
+            // Populate with current values
+            document.getElementById('textColor').value = window.getComputedStyle(document.body).color;
+            document.getElementById('bgColor').value = window.getComputedStyle(document.body).backgroundColor;
         }
 
         function saveConfig() {
@@ -206,9 +199,13 @@
                 airnowRSS: document.getElementById('airnowRSS').value
             };
 
+            // Update body styles
+            document.body.style.color = config.textColor;
+            document.body.style.backgroundColor = config.bgColor;
+
+            // Logic to save the configuration as a downloadable file
             const blob = new Blob([JSON.stringify(config)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
-
             const a = document.createElement('a');
             a.style.display = 'none';
             a.href = url;
@@ -217,8 +214,7 @@
             a.click();
             URL.revokeObjectURL(url);
 
-            hideConfigOverlay();
-            location.reload(); // Reload to apply changes.
+            document.getElementById('configOverlay').style.display = 'none';
         }
 
         document.getElementById('loadConfigFile').addEventListener('change', function() {
@@ -236,6 +232,9 @@
                 reader.readAsText(file);
             }
         });
+
+        // Event listener to show the configuration overlay on click
+        document.body.addEventListener('click', showConfigOverlay);
     </script>
 </body>
 
