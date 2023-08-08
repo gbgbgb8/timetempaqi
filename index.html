@@ -16,29 +16,29 @@
             width: 100vw;
             margin: 0;
             font-family: Arial, sans-serif;
-            overflow: hidden; /* hide any overflow */
+            overflow: hidden;
         }
 
         .data-display {
             text-align: center;
-            display: none; /* hide by default */
-            font-size: calc(25vw + 25vh); /* max font size */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            font-size: calc(30vw + 30vh);
             margin: 0;
             padding: 0;
-            line-height: 0.9; /* adjust line height to fill screen */
-            width: 100%;
-        }
-
-        #aqi {
-            font-size: calc(8vw + 8vh);
+            line-height: 0.9;
         }
 
         #aqi-value {
-            font-size: calc(20vw + 20vh); 
+            font-size: calc(40vw + 40vh);
         }
 
         #aqi-category {
-            font-size: calc(10vw + 10vh);
+            font-size: calc(20vw + 20vh);
         }
     </style>
 </head>
@@ -47,18 +47,17 @@
     <div id="time" class="data-display"></div>
     <div id="temperature" class="data-display"></div>
     <div id="aqi" class="data-display">
-        <div>AirNow</div>
         <div id="aqi-value"></div>
         <div id="aqi-category"></div>
     </div>
 
     <script>
         function updateDOM(data) {
-        document.getElementById('temperature').textContent = `${data.temperature}°`;
-        const [aqiValue, aqiCategory] = data.aqi.split(' - ');
-        document.getElementById('aqi-value').textContent = aqiValue;
-        document.getElementById('aqi-category').textContent = `${aqiCategory}`;
-    }
+            document.getElementById('temperature').textContent = `${data.temperature}°`;
+            const [aqiValue, aqiCategory] = data.aqi.split(' - ');
+            document.getElementById('aqi-value').textContent = aqiValue;
+            document.getElementById('aqi-category').textContent = `${aqiCategory} AirNow`;
+        }
 
         function getCurrentTime() {
             const now = new Date();
@@ -66,11 +65,9 @@
                 hour: 'numeric',
                 minute: '2-digit',
                 hour12: true,
-                timeZone: 'America/Los_Angeles' // Pacific Standard Time
+                timeZone: 'America/Los_Angeles'
             };
             let formatted = new Intl.DateTimeFormat('en-US', options).format(now);
-            
-            // Remove the AM/PM part and leading zero, if any
             formatted = formatted.replace(/ AM| PM/g, '').trim();
             return formatted.startsWith('0') ? formatted.slice(1) : formatted;
         }
@@ -91,11 +88,9 @@
                 });
         }
 
-        // Cycle through data elements
         let currentDisplay = 'time';
         function cycleDisplay() {
             document.getElementById(currentDisplay).style.display = 'none';
-
             if (currentDisplay === 'time') {
                 currentDisplay = 'temperature';
             } else if (currentDisplay === 'temperature') {
@@ -104,18 +99,17 @@
                 currentDisplay = 'time';
             }
 
-            // If time is the next display, update it with the current time
             if (currentDisplay === 'time') {
                 document.getElementById('time').textContent = getCurrentTime();
             }
 
-            document.getElementById(currentDisplay).style.display = 'block';
+            document.getElementById(currentDisplay).style.display = 'flex';
         }
 
         window.onload = function() {
             fetchData();
-            setInterval(cycleDisplay, 3000);  // cycle every 3 seconds
-            setInterval(fetchData, 60000);  // fetch new data every 60 seconds
+            setInterval(cycleDisplay, 3000);
+            setInterval(fetchData, 60000);
         };
     </script>
 </body>
