@@ -53,11 +53,11 @@
 
     <script>
         function updateDOM(data) {
-            document.getElementById('temperature').textContent = `${data.temperature}°F`;
-            const [aqiValue, aqiCategory] = data.aqi.split(' - ');
-            document.getElementById('aqi-value').textContent = aqiValue;
-            document.getElementById('aqi-category').textContent = aqiCategory;
-        }
+        document.getElementById('temperature').textContent = `${data.temperature}°F`;
+        const [aqiValue, aqiCategory] = data.aqi.split(' - ');
+        document.getElementById('aqi-value').textContent = aqiValue;
+        document.getElementById('aqi-category').textContent = `${aqiCategory} AirNow`; // Append "AirNow" to the AQI Category
+    }
 
         function getCurrentTime() {
             const now = new Date();
