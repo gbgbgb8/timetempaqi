@@ -198,10 +198,39 @@
             document.getElementById('bgColor').value = window.getComputedStyle(document.body).backgroundColor;
         }
 
-        // Remaining functions for saving, loading, and default configurations...
+        function saveConfigToFile() {
+            const config = {
+                textColor: document.getElementById('textColor').value,
+                bgColor: document.getElementById('bgColor').value,
+                timeZone: document.getElementById('timeZone').value,
+                weatherStation: document.getElementById('weatherStation').value,
+                airnowRSS: document.getElementById('airnowRSS').value
+            };
+
+            const blob = new Blob([JSON.stringify(config)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'tta.config';
+            document.body.appendChild(a);
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function restoreDefaults() {
+            document.getElementById('textColor').value = '#FFFFFF'; // Default white
+            document.getElementById('bgColor').value = '#000000'; // Default black
+            // Add other defaults as needed
+        }
 
         // Event listener to show the configuration overlay on click
-        document.body.addEventListener('click', showConfigOverlay);
+        document.body.addEventListener('click', function(event) {
+            if (event.target.id !== 'configOverlay' && !event.target.closest('#configOverlay')) {
+                showConfigOverlay();
+            }
+        });
     </script>
 </body>
 
