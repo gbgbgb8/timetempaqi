@@ -7,7 +7,6 @@
     <title>Data Display</title>
     <style>
         body {
-            background-color: black;
             color: white;
             display: flex;
             justify-content: center;
@@ -52,7 +51,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-color: rgba(127, 127, 127, 0.8); /* semi-transparent gray */
+            background-color: rgba(0, 0, 0, 0.9);
             z-index: 10;
             display: none;
             flex-direction: column;
@@ -60,7 +59,8 @@
             justify-content: center;
         }
 
-        .config-input, .config-select {
+        .config-input,
+        .config-select {
             margin: 10px;
             padding: 5px;
             font-size: 1.5em;
@@ -87,6 +87,10 @@
             background-color: white;
             color: black;
         }
+
+        .color-label {
+            margin-right: 10px;
+        }
     </style>
 </head>
 
@@ -100,33 +104,33 @@
 
     <!-- Configuration overlay -->
     <div class="config-overlay" id="configOverlay">
-        <label for="textColor">Text Color:</label>
+        <label class="color-label" for="textColor">Text Color:</label>
         <input type="color" id="textColor" class="config-input">
-
-        <label for="bgColor">Background Color:</label>
+        <label class="color-label" for="bgColor">Background Color:</label>
         <input type="color" id="bgColor" class="config-input">
-
-        <label for="timeZone">Time Zone:</label>
+        
         <select id="timeZone" class="config-select">
             <option value="America/New_York">Eastern Time</option>
             <option value="America/Chicago">Central Time</option>
             <option value="America/Denver">Mountain Time</option>
-            <option value="America/Phoenix">Mountain Standard Time</option>
+            <option value="America/Phoenix">Mountain Time (No DST)</option>
             <option value="America/Los_Angeles">Pacific Time</option>
             <option value="America/Anchorage">Alaska Time</option>
             <option value="Pacific/Honolulu">Hawaii-Aleutian Time</option>
+            <option value="Pacific/Samoa">Samoa Time</option>
         </select>
-
+        
         <input type="text" id="weatherStation" class="config-input" placeholder="WeatherUnderground Station ID">
         <input type="text" id="airnowRSS" class="config-input" placeholder="AirNow RSS link">
 
+        <!-- File input for loading configuration -->
         <input type="file" id="loadConfigFile" class="file-input">
-        <label for="loadConfigFile" class="file-label">Load Config</label>
+        <label for="loadConfigFile" class="file-label">Load from File</label>
 
         <button class="config-button" onclick="saveConfigToFile()">Save to File</button>
         <button class="config-button" onclick="restoreDefaults()">Restore Defaults</button>
-        <button class="config-button" onclick="saveAndApplyConfig()">OK</button>
-        <button class="config-button" onclick="cancelConfig()">Cancel</button>
+        <button class="config-button" onclick="applyConfig()">OK</button>
+        <button class="config-button" onclick="hideConfigOverlay()">Cancel</button>
     </div>
 
     <script>
