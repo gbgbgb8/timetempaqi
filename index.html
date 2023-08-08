@@ -54,7 +54,7 @@
 
     <script>
         function updateDOM(data) {
-        document.getElementById('temperature').textContent = `${data.temperature}°F`;
+        document.getElementById('temperature').textContent = `${data.temperature}°`;
         const [aqiValue, aqiCategory] = data.aqi.split(' - ');
         document.getElementById('aqi-value').textContent = aqiValue;
         document.getElementById('aqi-category').textContent = `${aqiCategory}`;
