@@ -36,7 +36,9 @@ async function fetchAirNowAQIData() {
     const apiKey = process.env.AIRNOW_API_KEY;
     const url = `https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&zipCode=94559&distance=5&API_KEY=${apiKey}`;
     
+    
     const response = await fetch(url);
+
 
     if (!response.ok) {
         console.error(`AirNow API responded with ${response.statusText}`);
