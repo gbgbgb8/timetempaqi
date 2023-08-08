@@ -48,42 +48,16 @@
         /* Configuration overlay styles */
         .config-overlay {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%;
-            max-width: 500px;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             background-color: rgba(50, 50, 50, 0.95);
             z-index: 10;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
             display: none;
-        }
-
-        .config-title {
-            text-align: center;
-            font-size: 1.8em;
-            margin-bottom: 20px;
-        }
-
-        .config-group {
-            border: 1px solid #777;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-        }
-
-        .config-button-group {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-        }
-
-        .config-button,
-        .preset {
-            flex: 0 48%; /* Allows two buttons per row */
-            margin: 5px 0;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .config-label,
@@ -97,6 +71,7 @@
         }
 
         .config-button {
+            margin: 10px;
             padding: 10px 20px;
             font-size: 1.5em;
             cursor: pointer;
@@ -117,6 +92,7 @@
         }
 
         .file-label {
+            margin: 10px;
             padding: 10px 20px;
             font-size: 1.5em;
             cursor: pointer;
@@ -129,6 +105,10 @@
 
         .file-label:hover {
             background-color: #555;
+        }
+
+        .color-label {
+            margin-right: 10px;
         }
     </style>
 </head>
@@ -143,57 +123,40 @@
 
     <!-- Configuration overlay -->
     <div class="config-overlay" id="configOverlay">
-        <div class="config-title">Configuration</div>
+        <label class="config-label" for="textColor">Text Color:</label>
+        <input type="color" id="textColor" class="config-input">
+        <br>
+        <label class="config-label" for="bgColor">Background Color:</label>
+        <input type="color" id="bgColor" class="config-input">
+        <br>
+        <label class="config-label" for="timeZone">Time Zone:</label>
+        <select id="timeZone" class="config-select">
+            <option value="America/New_York">Eastern Time</option>
+            <option value="America/Chicago">Central Time</option>
+            <option value="America/Denver">Mountain Time</option>
+            <option value="America/Los_Angeles" selected>Pacific Time</option>
+            <option value="America/Anchorage">Alaska Time</option>
+            <option value="Pacific/Honolulu">Hawaii Time</option>
+        </select>
+        <input type="text" id="weatherStation" class="config-input" placeholder="WeatherUnderground Station ID">
+        <input type="text" id="airnowRSS" class="config-input" placeholder="AirNow RSS link">
 
-        <div class="config-group">
-            <label class="config-label" for="textColor">Text Color:</label>
-            <input type="color" id="textColor" class="config-input">
-        </div>
+        <!-- File input for loading configuration -->
+        <input type="file" id="loadConfigFile" class="file-input">
+        <label for="loadConfigFile" class="file-label">Load from File</label>
+        <button class="config-button" onclick="saveConfigToFile()">Save to File</button>
+        
+        <!-- Preset buttons for high-contrast combinations -->
+        <button class="config-button preset" data-text-color="white" data-bg-color="black">White on Black</button>
+        <button class="config-button preset" data-text-color="black" data-bg-color="white">Black on White</button>
+        <button class="config-button preset" data-text-color="yellow" data-bg-color="black">Yellow on Black</button>
+        <button class="config-button preset" data-text-color="black" data-bg-color="yellow">Black on Yellow</button>
+        <button class="config-button preset" data-text-color="blue" data-bg-color="white">Blue on White</button>
+        <button class="config-button preset" data-text-color="white" data-bg-color="blue">White on Blue</button>
 
-        <div class="config-group">
-            <label class="config-label" for="bgColor">Background Color:</label>
-            <input type="color" id="bgColor" class="config-input">
-        </div>
-
-        <div class="config-group">
-            <label class="config-label" for="timeZone">Time Zone:</label>
-            <select id="timeZone" class="config-select">
-                <option value="America/New_York">Eastern Time</option>
-                <option value="America/Chicago">Central Time</option>
-                <option value="America/Denver">Mountain Time</option>
-                <option value="America/Los_Angeles" selected>Pacific Time</option>
-                <option value="America/Anchorage">Alaska Time</option>
-                <option value="Pacific/Honolulu">Hawaii Time</option>
-            </select>
-        </div>
-
-        <div class="config-group">
-            <input type="text" id="weatherStation" class="config-input" placeholder="WeatherUnderground Station ID">
-            <input type="text" id="airnowRSS" class="config-input" placeholder="AirNow RSS link">
-        </div>
-
-        <div class="config-group">
-            <input type="file" id="loadConfigFile" class="file-input">
-            <label for="loadConfigFile" class="file-label">Load from File</label>
-            <button class="config-button" onclick="saveConfigToFile()">Save to File</button>
-        </div>
-
-        <div class="config-group config-button-group">
-            <!-- Preset buttons for high-contrast combinations -->
-            <button class="config-button preset" data-text-color="white" data-bg-color="black">White on Black</button>
-            <button class="config-button preset" data-text-color="black" data-bg-color="white">Black on White</button>
-            <button class="config-button preset" data-text-color="yellow" data-bg-color="black">Yellow on Black</button>
-            <button class="config-button preset" data-text-color="black" data-bg-color="yellow">Black on Yellow</button>
-            <button class="config-button preset" data-text-color="blue" data-bg-color="white">Blue on White</button>
-            <button class="config-button preset" data-text-color="white" data-bg-color="blue">White on Blue</button>
-        </div>
-
-        <div class="config-button-group">
-            <button class="config-button" onclick="applyConfig()">OK</button>
-            <button class="config-button" onclick="hideConfigOverlay()">Cancel</button>
-        </div>
+        <button class="config-button" onclick="applyConfig()">OK</button>
+        <button class="config-button" onclick="hideConfigOverlay()">Cancel</button>
     </div>
-
 
     <script>
         function updateDOM(data) {
