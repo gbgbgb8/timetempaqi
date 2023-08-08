@@ -87,7 +87,6 @@
             background-color: white;
             color: black;
         }
-
     </style>
 </head>
 
@@ -112,6 +111,7 @@
         <label for="loadConfigFile" class="file-label">Load Config</label>
 
         <button class="config-button" onclick="saveConfig()">Save & Reload</button>
+        <button class="config-button" onclick="hideConfigOverlay()">Close Without Saving</button>
     </div>
 
     <script>
@@ -174,12 +174,27 @@
             setInterval(cycleDisplay, 3000);
             setInterval(fetchData, 60000);
         };
+
+        document.body.addEventListener('click', function(event) {
+            if (event.target.id !== 'configOverlay' && !event.target.classList.contains('config-input') && !event.target.classList.contains('config-button') && !event.target.classList.contains('file-label')) {
+                showConfigOverlay();
+            }
+        });
+
         function showConfigOverlay() {
+            populateConfigValues();
             document.getElementById('configOverlay').style.display = 'flex';
         }
 
         function hideConfigOverlay() {
             document.getElementById('configOverlay').style.display = 'none';
+        }
+
+        function populateConfigValues() {
+            // Here you can populate the fields with the current values, for this example, I'm just populating with default values.
+            document.getElementById('textColor').value = "White";
+            document.getElementById('bgColor').value = "Black";
+            // Add other default values or fetch from a source to populate.
         }
 
         function saveConfig() {
@@ -203,6 +218,7 @@
             URL.revokeObjectURL(url);
 
             hideConfigOverlay();
+            location.reload(); // Reload to apply changes.
         }
 
         document.getElementById('loadConfigFile').addEventListener('change', function() {
@@ -220,10 +236,6 @@
                 reader.readAsText(file);
             }
         });
-
-        // Event listener to show the configuration overlay on click
-        document.body.addEventListener('click', showConfigOverlay);
-
     </script>
 </body>
 

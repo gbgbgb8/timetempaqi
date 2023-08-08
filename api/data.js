@@ -45,8 +45,6 @@ async function fetchAirNowAQIData() {
 
     const data = await response.json();
 
-    console.log('AirNow API Response:', data);  // Log the response for debugging
-
     // Extract AQI and the category name from the response
     if (data && data.length > 0) {
         const { AQI, Category } = data[0];
@@ -69,6 +67,3 @@ function getCurrentTime() {
     formatted = formatted.replace(/ AM| PM/g, '').trim();
     return formatted.startsWith('0') ? formatted.slice(1) : formatted;
 }
-
-
-
