@@ -246,12 +246,16 @@
         }
 
         function applyConfig() {
-            const textColor = document.getElementById('textColor').value;
-            const bgColor = document.getElementById('bgColor').value;
-            document.body.style.color = textColor;
-            document.body.style.backgroundColor = bgColor;
-            hideConfigOverlay();
-        }
+    // Retrieve colors from the input fields
+    const textColor = document.getElementById('textColor').value;
+    const bgColor = document.getElementById('bgColor').value;
+
+    // Apply the colors
+    document.body.style.color = textColor;
+    document.body.style.backgroundColor = bgColor;
+
+    hideConfigOverlay();
+}
 
         document.getElementById('loadConfigFile').addEventListener('change', function() {
             const file = this.files[0];
@@ -280,7 +284,6 @@
     document.body.style.color = 'white';
     document.body.style.backgroundColor = 'black';
 }
-
 
 
         function loadInitialConfig() {
