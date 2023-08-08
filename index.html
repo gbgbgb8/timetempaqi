@@ -10,29 +10,29 @@
             background-color: black;
             color: white;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             font-family: Arial, sans-serif;
+            font-size: 8vw; /* dynamically adjust font size based on viewport width */
+            overflow: hidden; /* hide any overflow */
         }
 
         #data-display {
             text-align: center;
-            border: 1px solid white;
-            padding: 20px;
-            border-radius: 5px;
+            display: none; /* hide by default */
+        }
+
+        h2 {
+            font-size: 10vw; /* larger font size for the title */
         }
     </style>
 </head>
 
 <body>
-    <div id="data-display">
-        <h2>Data Overview</h2>
-        <p id="time">Time: Loading...</p>
-        <p id="temperature">Temperature: Loading...</p>
-        <p id="aqi">AQI: Loading...</p>
-    </div>
+    <div id="time" class="data-display">Time: Loading...</div>
+    <div id="temperature" class="data-display">Temperature: Loading...</div>
+    <div id="aqi" class="data-display">AQI: Loading...</div>
 
     <script>
         function fetchData() {
@@ -50,11 +50,32 @@
                 })
                 .catch(error => {
                     console.error('Error fetching data:', error);
-                    alert("There was an error fetching the data. Please try again later.");
                 });
+
+            // Show the first item (time) initially
+            document.getElementById('time').style.display = 'block';
         }
 
-        window.onload = fetchData;
+        // Cycle through data elements
+        let currentDisplay = 'time';
+        function cycleDisplay() {
+            document.getElementById(currentDisplay).style.display = 'none';
+
+            if (currentDisplay === 'time') {
+                currentDisplay = 'temperature';
+            } else if (currentDisplay === 'temperature') {
+                currentDisplay = 'aqi';
+            } else {
+                currentDisplay = 'time';
+            }
+
+            document.getElementById(currentDisplay).style.display = 'block';
+        }
+
+        window.onload = function() {
+            fetchData();
+            setInterval(cycleDisplay, 3000);  // cycle every 3 seconds
+        };
     </script>
 </body>
 
