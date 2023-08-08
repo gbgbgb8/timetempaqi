@@ -39,10 +39,13 @@ async function fetchAirNowAQIData() {
     const response = await fetch(url);
 
     if (!response.ok) {
+        console.error(`AirNow API responded with ${response.statusText}`);
         throw new Error(`AirNow API responded with ${response.statusText}`);
     }
 
     const data = await response.json();
+
+    console.log('AirNow API Response:', data);  // Log the response for debugging
 
     // Extract AQI and the category name from the response
     if (data && data.length > 0) {
