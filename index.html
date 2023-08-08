@@ -270,12 +270,13 @@
         });
 
         function restoreDefaults() {
-            document.getElementById('textColor').value = 'white';
-            document.getElementById('bgColor').value = 'black';
-            document.getElementById('timeZone').value = 'America/Los_Angeles';
-            document.getElementById('weatherStation').value = '';
-            document.getElementById('airnowRSS').value = '';
-        }
+    document.getElementById('textColor').value = 'white';  // Set to white
+    document.getElementById('bgColor').value = 'black';
+    document.getElementById('timeZone').value = 'America/Los_Angeles';
+    document.getElementById('weatherStation').value = '';
+    document.getElementById('airnowRSS').value = '';
+}
+
 
         function loadInitialConfig() {
             document.getElementById('textColor').value = getComputedStyle(document.body).getPropertyValue('color').trim();
