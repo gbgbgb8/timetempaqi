@@ -272,6 +272,7 @@
                 reader.readAsText(file);
             }
         });
+
         function restoreDefaults() {
     // Set default values
     document.getElementById('textColor').value = 'white';
@@ -283,13 +284,18 @@
     // Directly apply the styles
     document.body.style.color = 'white';
     document.body.style.backgroundColor = 'black';
+    
+    // Set Configuration overlay text color to white for visibility
+    document.getElementById('configOverlay').style.color = 'white';
 }
 
 
-        function loadInitialConfig() {
-            document.getElementById('textColor').value = getComputedStyle(document.body).getPropertyValue('color').trim();
-            document.getElementById('bgColor').value = getComputedStyle(document.body).getPropertyValue('background-color').trim();
-        }
+
+function loadInitialConfig() {
+    document.getElementById('textColor').value = 'white';
+    document.getElementById('bgColor').value = 'black';
+}
+
 
         // Event listener to show the configuration overlay on click
         document.body.addEventListener('click', function(event) {
