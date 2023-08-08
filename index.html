@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,6 +16,7 @@
             margin: 0;
             font-family: Arial, sans-serif;
             overflow: hidden;
+            background-color: black;
         }
 
         .data-display {
@@ -147,12 +147,11 @@
 
         function getCurrentTime() {
             const now = new Date();
-            const selectedTimeZone = document.getElementById('timeZone').value || 'America/Los_Angeles';
             const options = {
                 hour: 'numeric',
                 minute: '2-digit',
                 hour12: true,
-                timeZone: selectedTimeZone
+                timeZone: document.getElementById('timeZone').value || 'America/Los_Angeles'
             };
             let formatted = new Intl.DateTimeFormat('en-US', options).format(now);
             formatted = formatted.replace(/ AM| PM/g, '').trim();
