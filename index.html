@@ -7,8 +7,8 @@
     <title>Data Display</title>
     <style>
         body {
-            background-color: var(--bg-color, black);
-            color: var(--text-color, white);
+            background-color: black;
+            color: white;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -33,6 +33,10 @@
             font-size: 50vw;
         }
 
+        #time {
+            font-size: 30vw;
+        }
+
         #aqi-value {
             font-size: 40vw;
         }
@@ -41,50 +45,49 @@
             font-size: 20vw;
         }
 
-        /* Configuration Overlay Styles */
+        /* Configuration overlay styles */
         .config-overlay {
             position: fixed;
             top: 0;
             left: 0;
-            height: 100vh;
             width: 100vw;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            display: none;
-            justify-content: center;
-            align-items: center;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.9);
             z-index: 10;
-        }
-
-        .config-form {
-            max-width: 500px;
-            width: 100%;
-            background-color: #333;
-            padding: 20px;
-            border-radius: 10px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .config-input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: none;
-            background-color: #555;
-            color: white;
+            margin: 10px;
+            padding: 5px;
+            font-size: 1.5em;
+            width: 80%;
         }
 
-        .config-btn {
-            padding: 10px 15px;
-            border: none;
-            background-color: #888;
-            color: white;
+        .config-button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 1.5em;
             cursor: pointer;
-            transition: background-color 0.3s;
         }
 
-        .config-btn:hover {
-            background-color: #aaa;
+        /* File input styling */
+        .file-input {
+            display: none;
         }
+
+        .file-label {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 1.5em;
+            cursor: pointer;
+            background-color: white;
+            color: black;
+        }
+
     </style>
 </head>
 
@@ -96,50 +99,22 @@
         <div id="aqi-category"></div>
     </div>
 
-    <!-- Configuration Overlay -->
+    <!-- Configuration overlay -->
     <div class="config-overlay" id="configOverlay">
-        <form class="config-form" id="configForm">
-            <input type="color" id="bgColor" class="config-input" value="#000000" placeholder="Background Color">
-            <input type="color" id="textColor" class="config-input" value="#FFFFFF" placeholder="Text Color">
-            <input type="text" id="timeZone" class="config-input" placeholder="Time Zone">
-            <input type="text" id="weatherStationID" class="config-input" placeholder="WeatherUnderground Station ID">
-            <input type="text" id="airNowRSS" class="config-input" placeholder="AirNow RSS Link">
-            <button type="button" class="config-btn" id="saveConfig">Save Config</button>
-            <input type="file" class="config-input" id="loadConfigFile" accept=".json">
-            <button type="button" class="config-btn" id="loadConfig">Load Config</button>
-            <button type="button" class="config-btn" id="saveReload">Save & Reload</button>
-        </form>
+        <input type="text" id="textColor" class="config-input" placeholder="Text color: White">
+        <input type="text" id="bgColor" class="config-input" placeholder="Background color: Black">
+        <input type="text" id="timeZone" class="config-input" placeholder="TimeZone:">
+        <input type="text" id="weatherStation" class="config-input" placeholder="WeatherUnderground Station ID">
+        <input type="text" id="airnowRSS" class="config-input" placeholder="AirNow RSS link">
+
+        <!-- File input for loading configuration -->
+        <input type="file" id="loadConfigFile" class="file-input">
+        <label for="loadConfigFile" class="file-label">Load Config</label>
+
+        <button class="config-button" onclick="saveConfig()">Save & Reload</button>
     </div>
 
     <script>
-        let currentConfig = {
-            bgColor: '#000000',
-            textColor: '#FFFFFF',
-            timeZone: 'America/Los_Angeles',
-            weatherStationID: '',
-            airNowRSS: ''
-        };
-
-        function populateConfigOverlay() {
-            document.getElementById('bgColor').value = currentConfig.bgColor;
-            document.getElementById('textColor').value = currentConfig.textColor;
-            document.getElementById('timeZone').value = currentConfig.timeZone;
-            document.getElementById('weatherStationID').value = currentConfig.weatherStationID;
-            document.getElementById('airNowRSS').value = currentConfig.airNowRSS;
-        }
-
-        document.body.addEventListener('click', function() {
-            const configOverlay = document.getElementById('configOverlay');
-            configOverlay.style.display = 'flex';
-            populateConfigOverlay();
-        });
-
-        document.getElementById('saveReload').addEventListener('click', function() {
-            const configOverlay = document.getElementById('configOverlay');
-            configOverlay.style.display = 'none';
-            location.reload();
-        });
-
         function updateDOM(data) {
             document.getElementById('temperature').textContent = `${data.temperature}°`;
             const [aqiValue, aqiCategory] = data.aqi.split(' - ');
@@ -153,7 +128,7 @@
                 hour: 'numeric',
                 minute: '2-digit',
                 hour12: true,
-                timeZone: currentConfig.timeZone || 'America/Los_Angeles'
+                timeZone: 'America/Los_Angeles'
             };
             let formatted = new Intl.DateTimeFormat('en-US', options).format(now);
             formatted = formatted.replace(/ AM| PM/g, '').trim();
@@ -199,6 +174,56 @@
             setInterval(cycleDisplay, 3000);
             setInterval(fetchData, 60000);
         };
+        function showConfigOverlay() {
+            document.getElementById('configOverlay').style.display = 'flex';
+        }
+
+        function hideConfigOverlay() {
+            document.getElementById('configOverlay').style.display = 'none';
+        }
+
+        function saveConfig() {
+            const config = {
+                textColor: document.getElementById('textColor').value,
+                bgColor: document.getElementById('bgColor').value,
+                timeZone: document.getElementById('timeZone').value,
+                weatherStation: document.getElementById('weatherStation').value,
+                airnowRSS: document.getElementById('airnowRSS').value
+            };
+
+            const blob = new Blob([JSON.stringify(config)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'tta.config';
+            document.body.appendChild(a);
+            a.click();
+            URL.revokeObjectURL(url);
+
+            hideConfigOverlay();
+        }
+
+        document.getElementById('loadConfigFile').addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const config = JSON.parse(e.target.result);
+                    document.getElementById('textColor').value = config.textColor || '';
+                    document.getElementById('bgColor').value = config.bgColor || '';
+                    document.getElementById('timeZone').value = config.timeZone || '';
+                    document.getElementById('weatherStation').value = config.weatherStation || '';
+                    document.getElementById('airnowRSS').value = config.airnowRSS || '';
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        // Event listener to show the configuration overlay on click
+        document.body.addEventListener('click', showConfigOverlay);
+
     </script>
 </body>
 
