@@ -45,87 +45,68 @@
             font-size: 20vw;
         }
 
-        /* Revamped Configuration Overlay Styles */
+        /* Configuration overlay styles */
         .config-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(50, 50, 50, 0.95);
             z-index: 10;
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-        }
-
-        .config-box {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            width: 90%;
+            border-radius: 15px;
             max-width: 500px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            margin: auto;
+            padding: 20px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
         }
 
-        .config-group {
-            display: flex;
-            flex-direction: column;
-            margin: 10px 0;
+        .config-header {
+            font-weight: bold;
+            font-size: 1.8em;
+            margin-bottom: 20px;
         }
 
-        .config-label {
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-
+        .config-label,
         .config-input,
         .config-select {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1em;
+            margin: 10px 0;
+            padding: 5px;
+            font-size: 1.2em;
             width: 100%;
+            text-align: center;
         }
 
-        .config-button-group {
+        .config-button, .preset-button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+            background-color: #444;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .config-button:hover, .preset-button:hover {
+            background-color: #555;
+        }
+
+        .presets {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             margin-top: 20px;
         }
 
-        .config-button,
-        .file-label {
-            padding: 10px 15px;
-            font-size: 1em;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            transition: background-color 0.2s;
-        }
-
-        .config-button {
-            background-color: #007BFF;
-            color: #fff;
-        }
-
-        .config-button:hover {
-            background-color: #0056b3;
-        }
-
-        .file-label {
-            background-color: #28a745;
-            color: #fff;
-        }
-
-        .file-label:hover {
-            background-color: #1e7e34;
-        }
-
-        .preset {
+        .preset-button {
+            flex: 1;
             margin: 5px;
-            font-size: 0.8em;
         }
     </style>
 </head>
@@ -138,57 +119,41 @@
         <div id="aqi-category"></div>
     </div>
 
-    <!-- Revamped Configuration overlay -->
+    <!-- Configuration overlay -->
     <div class="config-overlay" id="configOverlay">
-        <div class="config-box">
-            <div class="config-group">
-                <label class="config-label" for="textColor">Text Color:</label>
-                <input type="color" id="textColor" class="config-input">
-            </div>
-            
-            <div class="config-group">
-                <label class="config-label" for="bgColor">Background Color:</label>
-                <input type="color" id="bgColor" class="config-input">
-            </div>
+        <div class="config-header">Configuration</div>
+        <label class="config-label" for="textColor">Text Color:</label>
+        <input type="color" id="textColor" class="config-input">
+        
+        <label class="config-label" for="bgColor">Background Color:</label>
+        <input type="color" id="bgColor" class="config-input">
 
-            <div class="config-group">
-                <label class="config-label" for="timeZone">Time Zone:</label>
-                <select id="timeZone" class="config-select">
-                    <option value="America/New_York">Eastern Time</option>
-                    <option value="America/Chicago">Central Time</option>
-                    <option value="America/Denver">Mountain Time</option>
-                    <option value="America/Los_Angeles" selected>Pacific Time</option>
-                    <option value="America/Anchorage">Alaska Time</option>
-                    <option value="Pacific/Honolulu">Hawaii Time</option>
-                </select>
-            </div>
+        <label class="config-label" for="timeZone">Time Zone:</label>
+        <select id="timeZone" class="config-select">
+            <option value="America/New_York">Eastern Time</option>
+            <option value="America/Chicago">Central Time</option>
+            <option value="America/Denver">Mountain Time</option>
+            <option value="America/Los_Angeles" selected>Pacific Time</option>
+            <option value="America/Anchorage">Alaska Time</option>
+            <option value="Pacific/Honolulu">Hawaii Time</option>
+        </select>
+        
+        <input type="text" id="weatherStation" class="config-input" placeholder="WeatherUnderground Station ID">
+        <input type="text" id="airnowRSS" class="config-input" placeholder="AirNow RSS link">
 
-            <div class="config-group">
-                <input type="text" id="weatherStation" class="config-input" placeholder="WeatherUnderground Station ID">
-            </div>
-
-            <div class="config-group">
-                <input type="text" id="airnowRSS" class="config-input" placeholder="AirNow RSS link">
-            </div>
-
-            <div class="config-button-group">
-                <input type="file" id="loadConfigFile" class="file-input">
-                <label for="loadConfigFile" class="file-label">Load</label>
-                <button class="config-button" onclick="saveConfigToFile()">Save</button>
-                <button class="config-button" onclick="applyConfig()">OK</button>
-                <button class="config-button" style="background-color: #dc3545;" onclick="hideConfigOverlay()">Cancel</button>
-            </div>
-
-            <div class="config-group">
-                <button class="preset" onclick="applyPreset('#FFFFFF', '#000000')">White on Black</button>
-                <button class="preset" onclick="applyPreset('#000000', '#FFFFFF')">Black on White</button>
-                <button class="preset" onclick="applyPreset('#000000', '#FFD700')">Black on Gold</button>
-                <button class="preset" onclick="applyPreset('#FFFFFF', '#FF4500')">White on Red-Orange</button>
-                <button class="preset" onclick="applyPreset('#FFFFFF', '#4B0082')">White on Indigo</button>
-                <button class="preset" onclick="applyPreset('#FFFFFF', '#228B22')">White on Forest Green</button>
-            </div>
+        <div class="presets">
+            <button class="preset-button" onclick="applyPreset('#FFFFFF', '#000000')">White on Black</button>
+            <button class="preset-button" onclick="applyPreset('#000000', '#FFFFFF')">Black on White</button>
+            <button class="preset-button" onclick="applyPreset('#000000', '#FFFF00')">Black on Yellow</button>
+            <button class="preset-button" onclick="applyPreset('#FFFF00', '#000000')">Yellow on Black</button>
+            <button class="preset-button" onclick="applyPreset('#FFFFFF', '#FF00FF')">White on Magenta</button>
+            <button class="preset-button" onclick="applyPreset('#FF00FF', '#FFFFFF')">Magenta on White</button>
         </div>
+
+        <button class="config-button" onclick="applyConfig()">OK</button>
+        <button class="config-button" onclick="hideConfigOverlay()">Cancel</button>
     </div>
+
     <script>
         function updateDOM(data) {
             document.getElementById('temperature').textContent = `${data.temperature}°`;
@@ -262,27 +227,6 @@
             document.getElementById('configOverlay').style.display = 'none';
         }
 
-        function saveConfigToFile() {
-            const config = {
-                textColor: document.getElementById('textColor').value,
-                bgColor: document.getElementById('bgColor').value,
-                timeZone: document.getElementById('timeZone').value,
-                weatherStation: document.getElementById('weatherStation').value,
-                airnowRSS: document.getElementById('airnowRSS').value
-            };
-
-            const blob = new Blob([JSON.stringify(config)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = url;
-            a.download = 'tta.config';
-            document.body.appendChild(a);
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
         function applyConfig() {
             const textColor = document.getElementById('textColor').value;
             const bgColor = document.getElementById('bgColor').value;
@@ -291,40 +235,20 @@
             hideConfigOverlay();
         }
 
-        document.getElementById('loadConfigFile').addEventListener('change', function() {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const config = JSON.parse(e.target.result);
-                    document.getElementById('textColor').value = config.textColor || '';
-                    document.getElementById('bgColor').value = config.bgColor || '';
-                    document.getElementById('timeZone').value = config.timeZone || 'America/Los_Angeles';
-                    document.getElementById('weatherStation').value = config.weatherStation || '';
-                    document.getElementById('airnowRSS').value = config.airnowRSS || '';
-                };
-                reader.readAsText(file);
-            }
-        });
+        function applyPreset(textColor, bgColor) {
+            document.getElementById('textColor').value = textColor;
+            document.getElementById('bgColor').value = bgColor;
+
+            // Apply the styles immediately
+            document.body.style.color = textColor;
+            document.body.style.backgroundColor = bgColor;
+        }
 
         function loadInitialConfig() {
             document.getElementById('textColor').value = getComputedStyle(document.body).getPropertyValue('color').trim();
             document.getElementById('bgColor').value = getComputedStyle(document.body).getPropertyValue('background-color').trim();
         }
 
-        document.querySelectorAll('.preset').forEach(button => {
-            button.addEventListener('click', function() {
-                const textColor = this.getAttribute('data-text-color');
-                const bgColor = this.getAttribute('data-bg-color');
-                
-                document.getElementById('textColor').value = textColor;
-                document.getElementById('bgColor').value = bgColor;
-
-                applyConfig();
-            });
-        });
-
-        // Event listener to show the configuration overlay on click
         document.body.addEventListener('click', function(event) {
             if (event.target.id !== 'configOverlay' && !event.target.closest('#configOverlay')) {
                 showConfigOverlay();
