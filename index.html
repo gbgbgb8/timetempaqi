@@ -269,13 +269,18 @@
             }
         });
         function restoreDefaults() {
-    document.getElementById('textColor').value = 'white';  // Set to white
+    // Set default values
+    document.getElementById('textColor').value = 'white';
     document.getElementById('bgColor').value = 'black';
     document.getElementById('timeZone').value = 'America/Los_Angeles';
     document.getElementById('weatherStation').value = '';
     document.getElementById('airnowRSS').value = '';
-    applyConfig();  // Apply the default colors immediately
+
+    // Directly apply the styles
+    document.body.style.color = 'white';
+    document.body.style.backgroundColor = 'black';
 }
+
 
 
         function loadInitialConfig() {
