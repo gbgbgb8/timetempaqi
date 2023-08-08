@@ -14,33 +14,28 @@
             align-items: center;
             height: 100vh;
             font-family: Arial, sans-serif;
-            font-size: 18vw; /* dynamically adjust font size based on viewport width */
             overflow: hidden; /* hide any overflow */
         }
 
-        #data-display {
+        .data-display {
             text-align: center;
             display: none; /* hide by default */
+            font-size: 20vw; /* dynamically adjust font size based on viewport width */
         }
 
         #aqi-value {
-            font-size: 22vw; /* even larger font size for the AQI value */
-        }
-
-        #aqi {
-            text-align: center;
-            display: none; /* hide by default */
+            font-size: 18vw; /* slightly smaller font size for the AQI value */
         }
     </style>
 </head>
 
 <body>
-    <div id="time" class="data-display">Loading...</div>
-    <div id="temperature" class="data-display">Loading...</div>
+    <div id="time" class="data-display"></div>
+    <div id="temperature" class="data-display"></div>
     <div id="aqi" class="data-display">
         AirNow AQI
-        <div id="aqi-value">Loading...</div>
-        <div id="aqi-category">Loading...</div>
+        <div id="aqi-value"></div>
+        <div id="aqi-category"></div>
     </div>
 
     <script>
