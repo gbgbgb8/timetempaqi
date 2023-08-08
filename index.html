@@ -106,9 +106,12 @@
     <div class="config-overlay" id="configOverlay">
         <label class="color-label" for="textColor">Text Color:</label>
         <input type="color" id="textColor" class="config-input">
+        <br>
         <label class="color-label" for="bgColor">Background Color:</label>
         <input type="color" id="bgColor" class="config-input">
+        <br>
         
+        <label for="timeZone">Time Zone:</label>
         <select id="timeZone" class="config-select">
             <option value="America/New_York">Eastern Time</option>
             <option value="America/Chicago">Central Time</option>
@@ -143,11 +146,12 @@
 
         function getCurrentTime() {
             const now = new Date();
+            const selectedTimeZone = document.getElementById('timeZone').value || 'America/Los_Angeles';
             const options = {
                 hour: 'numeric',
                 minute: '2-digit',
                 hour12: true,
-                timeZone: 'America/Los_Angeles'  // This will be dynamic based on user's choice
+                timeZone: selectedTimeZone
             };
             let formatted = new Intl.DateTimeFormat('en-US', options).format(now);
             formatted = formatted.replace(/ AM| PM/g, '').trim();
@@ -192,10 +196,12 @@
             fetchData();
             setInterval(cycleDisplay, 3000);
             setInterval(fetchData, 60000);
+            loadInitialConfig();
         };
 
         function showConfigOverlay() {
             document.getElementById('configOverlay').style.display = 'flex';
+            loadInitialConfig();
         }
 
         function hideConfigOverlay() {
@@ -204,8 +210,8 @@
 
         function saveConfigToFile() {
             const config = {
-                textColor: document.getElementById('textColor').value || '#FFFFFF',
-                bgColor: document.getElementById('bgColor').value || '#000000',
+                textColor: document.getElementById('textColor').value,
+                bgColor: document.getElementById('bgColor').value,
                 timeZone: document.getElementById('timeZone').value,
                 weatherStation: document.getElementById('weatherStation').value,
                 airnowRSS: document.getElementById('airnowRSS').value
@@ -223,14 +229,22 @@
             URL.revokeObjectURL(url);
         }
 
+        function applyConfig() {
+            const textColor = document.getElementById('textColor').value;
+            const bgColor = document.getElementById('bgColor').value;
+            document.body.style.color = textColor;
+            document.body.style.backgroundColor = bgColor;
+            hideConfigOverlay();
+        }
+
         document.getElementById('loadConfigFile').addEventListener('change', function() {
             const file = this.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const config = JSON.parse(e.target.result);
-                    document.getElementById('textColor').value = config.textColor || '#FFFFFF';
-                    document.getElementById('bgColor').value = config.bgColor || '#000000';
+                    document.getElementById('textColor').value = config.textColor || '';
+                    document.getElementById('bgColor').value = config.bgColor || '';
                     document.getElementById('timeZone').value = config.timeZone || 'America/Los_Angeles';
                     document.getElementById('weatherStation').value = config.weatherStation || '';
                     document.getElementById('airnowRSS').value = config.airnowRSS || '';
@@ -240,29 +254,24 @@
         });
 
         function restoreDefaults() {
-            document.getElementById('textColor').value = '#FFFFFF';
-            document.getElementById('bgColor').value = '#000000';
+            document.getElementById('textColor').value = 'white';
+            document.getElementById('bgColor').value = 'black';
             document.getElementById('timeZone').value = 'America/Los_Angeles';
             document.getElementById('weatherStation').value = '';
             document.getElementById('airnowRSS').value = '';
         }
 
-        function saveAndApplyConfig() {
-            // Apply changes
-            document.body.style.color = document.getElementById('textColor').value || '#FFFFFF';
-            document.body.style.backgroundColor = document.getElementById('bgColor').value || '#000000';
-            
-            // Hide overlay after applying changes
-            hideConfigOverlay();
-        }
-
-        function cancelConfig() {
-            hideConfigOverlay();
+        function loadInitialConfig() {
+            document.getElementById('textColor').value = getComputedStyle(document.body).getPropertyValue('color').trim();
+            document.getElementById('bgColor').value = getComputedStyle(document.body).getPropertyValue('background-color').trim();
         }
 
         // Event listener to show the configuration overlay on click
-        document.body.addEventListener('click', showConfigOverlay);
-
+        document.body.addEventListener('click', function(event) {
+            if (event.target.id !== 'configOverlay' && !event.target.closest('#configOverlay')) {
+                showConfigOverlay();
+            }
+        });
     </script>
 </body>
 
