@@ -3,7 +3,7 @@ const fetch = require('node-fetch');
 module.exports = async (req, res) => {
     try {
         const weatherData = await fetchWeatherData();
-        const aqiData = await fetchAQIData();
+        const aqiData = await fetchAirNowAQIData();
 
         res.json({
             time: getCurrentTime(),
@@ -32,25 +32,24 @@ async function fetchWeatherData() {
     return data.observations[0].imperial.temp || 'Unknown'; 
 }
 
-async function fetchAQIData() {
-    const apiKey = process.env.PURPLEAIR_API_KEY;
-    const url = `https://api.purpleair.com/v1/sensors/69541`;
+async function fetchAirNowAQIData() {
+    const apiKey = process.env.AIRNOW_API_KEY;
+    const url = `https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&zipCode=94559&distance=5&API_KEY=${apiKey}`;
     
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-            'X-API-Key': apiKey
-        }
-    });
+    const response = await fetch(url);
 
     if (!response.ok) {
-        throw new Error(`AQI API responded with ${response.statusText}`);
+        throw new Error(`AirNow API responded with ${response.statusText}`);
     }
 
     const data = await response.json();
-    
-    // Extract PM2.5 value from PurpleAir API response as an AQI approximation
-    return data.sensor.stats.pm2_5 || 'Unknown'; 
+
+    // Extract AQI and the category name from the response
+    if (data && data.length > 0) {
+        const { AQI, Category } = data[0];
+        return `${AQI} - ${Category.Name}`;
+    }
+    return 'Unknown';
 }
 
 function getCurrentTime() {
