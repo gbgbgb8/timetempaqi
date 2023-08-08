@@ -54,12 +54,13 @@ async function fetchAirNowAQIData() {
 }
 
 function getCurrentTime() {
+    const selectedTimeZone = document.getElementById('timeZone').value;
     const now = new Date();
     const options = {
         hour: 'numeric',
         minute: '2-digit',
         hour12: true,
-        timeZone: 'America/Los_Angeles' // Pacific Standard Time
+        timeZone: selectedTimeZone // use selected timezone
     };
     let formatted = new Intl.DateTimeFormat('en-US', options).format(now);
     

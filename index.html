@@ -104,8 +104,16 @@
         <label for="bgColor">Background Color:</label>
         <input type="color" id="bgColor" class="config-input">
         <label for="timeZone">Time Zone:</label>
-        <input type="text" id="timeZone" class="config-input" placeholder="America/Los_Angeles">
-        <label for="weatherStation">Wunderground Station ID</label>
+    <select id="timeZone" class="config-input">
+        <option value="America/New_York">Eastern Time</option>
+        <option value="America/Chicago">Central Time</option>
+        <option value="America/Denver">Mountain Time</option>
+        <option value="America/Phoenix">Mountain Standard Time</option>
+        <option value="America/Los_Angeles">Pacific Time</option>
+        <option value="America/Anchorage">Alaska Time</option>
+        <option value="Pacific/Honolulu">Hawaii-Aleutian Time</option>
+    </select>
+<label for="weatherStation">Wunderground Station ID</label>
         <input type="text" id="weatherStation" class="config-input" placeholder="KCANAPA281">
         <label for="airnowRSS">AirNow ZIP code</label>
         <input type="text" id="airnowRSS" class="config-input" placeholder="94559">
