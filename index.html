@@ -57,7 +57,7 @@
         document.getElementById('temperature').textContent = `${data.temperature}°F`;
         const [aqiValue, aqiCategory] = data.aqi.split(' - ');
         document.getElementById('aqi-value').textContent = aqiValue;
-        document.getElementById('aqi-category').textContent = '${aqiCategory}'
+        document.getElementById('aqi-category').textContent = `${aqiCategory}`;
     }
 
         function getCurrentTime() {
