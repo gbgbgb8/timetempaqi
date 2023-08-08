@@ -26,13 +26,26 @@
         h2 {
             font-size: 10vw; /* larger font size for the title */
         }
+
+        #aqi-value {
+            font-size: 12vw; /* even larger font size for the AQI value */
+        }
+
+        #aqi {
+            text-align: center;
+            display: none; /* hide by default */
+        }
     </style>
 </head>
 
 <body>
     <div id="time" class="data-display">Time: Loading...</div>
     <div id="temperature" class="data-display">Temperature: Loading...</div>
-    <div id="aqi" class="data-display">AQI: Loading...</div>
+    <div id="aqi" class="data-display">
+        AirNow AQI
+        <div id="aqi-value">Loading...</div>
+        <div id="aqi-category">Loading...</div>
+    </div>
 
     <script>
         function fetchData() {
@@ -46,7 +59,9 @@
                 .then(data => {
                     document.getElementById('time').textContent = `Time: ${data.time}`;
                     document.getElementById('temperature').textContent = `Temperature: ${data.temperature}°F`;
-                    document.getElementById('aqi').textContent = `AQI: ${data.aqi}`;
+                    const [aqiValue, aqiCategory] = data.aqi.split(' - ');
+                    document.getElementById('aqi-value').textContent = aqiValue;
+                    document.getElementById('aqi-category').textContent = aqiCategory;
                 })
                 .catch(error => {
                     console.error('Error fetching data:', error);
