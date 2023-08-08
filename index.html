@@ -30,7 +30,7 @@
             margin: 0;
             padding: 0;
             line-height: 0.8;
-            font-size: 40vw; /* Uniform font size for time and temperature */
+            font-size: 50vw;
         }
 
         #aqi-value {
@@ -39,6 +39,51 @@
 
         #aqi-category {
             font-size: 20vw;
+        }
+
+        /* Configuration Overlay Styles */
+        .config-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 100vw;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .config-form {
+            max-width: 500px;
+            width: 100%;
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .config-input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            background-color: #555;
+            color: white;
+        }
+
+        .config-btn {
+            padding: 10px 15px;
+            border: none;
+            background-color: #888;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .config-btn:hover {
+            background-color: #aaa;
         }
     </style>
 </head>
@@ -51,7 +96,63 @@
         <div id="aqi-category"></div>
     </div>
 
+    <!-- Configuration Overlay -->
+    <div class="config-overlay" id="configOverlay">
+        <form class="config-form">
+            <input type="color" id="bgColor" class="config-input" value="#000000" placeholder="Background Color">
+            <input type="color" id="textColor" class="config-input" value="#FFFFFF" placeholder="Text Color">
+            <input type="text" id="timeZone" class="config-input" placeholder="Time Zone">
+            <input type="text" id="weatherStationID" class="config-input" placeholder="WeatherUnderground Station ID">
+            <input type="text" id="airNowRSS" class="config-input" placeholder="AirNow RSS Link">
+            <button type="button" class="config-btn" id="saveConfig">Save Config</button>
+            <input type="file" class="config-input" id="loadConfigFile" accept=".json">
+            <button type="button" class="config-btn" id="loadConfig">Load Config</button>
+        </form>
+    </div>
+
     <script>
+        // Configuration Overlay logic
+        document.body.addEventListener('click', function() {
+            const configOverlay = document.getElementById('configOverlay');
+            configOverlay.style.display = configOverlay.style.display === 'none' ? 'flex' : 'none';
+        });
+
+        document.getElementById('saveConfig').addEventListener('click', function() {
+            const configData = {
+                bgColor: document.getElementById('bgColor').value,
+                textColor: document.getElementById('textColor').value,
+                timeZone: document.getElementById('timeZone').value,
+                weatherStationID: document.getElementById('weatherStationID').value,
+                airNowRSS: document.getElementById('airNowRSS').value
+            };
+
+            const blob = new Blob([JSON.stringify(configData)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'tta.config.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+
+        document.getElementById('loadConfig').addEventListener('click', function() {
+            const fileInput = document.getElementById('loadConfigFile');
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const configData = JSON.parse(event.target.result);
+                    document.getElementById('bgColor').value = configData.bgColor;
+                    document.getElementById('textColor').value = configData.textColor;
+                    document.getElementById('timeZone').value = configData.timeZone;
+                    document.getElementById('weatherStationID').value = configData.weatherStationID;
+                    document.getElementById('airNowRSS').value = configData.airNowRSS;
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        // Original logic
         function updateDOM(data) {
             document.getElementById('temperature').textContent = `${data.temperature}°`;
             const [aqiValue, aqiCategory] = data.aqi.split(' - ');
