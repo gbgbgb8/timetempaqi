@@ -145,7 +145,15 @@
         <input type="file" id="loadConfigFile" class="file-input">
         <label for="loadConfigFile" class="file-label">Load from File</label>
         <button class="config-button" onclick="saveConfigToFile()">Save to File</button>
-        <button class="config-button" onclick="restoreDefaults()">Restore Defaults</button>
+        
+        <!-- Preset buttons for high-contrast combinations -->
+        <button class="config-button preset" data-text-color="white" data-bg-color="black">White on Black</button>
+        <button class="config-button preset" data-text-color="black" data-bg-color="white">Black on White</button>
+        <button class="config-button preset" data-text-color="yellow" data-bg-color="black">Yellow on Black</button>
+        <button class="config-button preset" data-text-color="black" data-bg-color="yellow">Black on Yellow</button>
+        <button class="config-button preset" data-text-color="blue" data-bg-color="white">Blue on White</button>
+        <button class="config-button preset" data-text-color="white" data-bg-color="blue">White on Blue</button>
+
         <button class="config-button" onclick="applyConfig()">OK</button>
         <button class="config-button" onclick="hideConfigOverlay()">Cancel</button>
     </div>
@@ -159,20 +167,19 @@
         }
 
         function getCurrentTime() {
-    const timeZone = document.getElementById('timeZone') ? document.getElementById('timeZone').value : 'America/Los_Angeles';
-    const options = {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true,
-        timeZone: timeZone
-    };
-    let formatted = new Intl.DateTimeFormat('en-US', options).format(new Date());
-    
-    // Remove the AM/PM part and leading zero, if any
-    formatted = formatted.replace(/ AM| PM/g, '').trim();
-    return formatted.startsWith('0') ? formatted.slice(1) : formatted;
-}
-
+            const timeZone = document.getElementById('timeZone') ? document.getElementById('timeZone').value : 'America/Los_Angeles';
+            const options = {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true,
+                timeZone: timeZone
+            };
+            let formatted = new Intl.DateTimeFormat('en-US', options).format(new Date());
+            
+            // Remove the AM/PM part and leading zero, if any
+            formatted = formatted.replace(/ AM| PM/g, '').trim();
+            return formatted.startsWith('0') ? formatted.slice(1) : formatted;
+        }
 
         function fetchData() {
             fetch('/api/data')
@@ -246,16 +253,12 @@
         }
 
         function applyConfig() {
-    // Retrieve colors from the input fields
-    const textColor = document.getElementById('textColor').value;
-    const bgColor = document.getElementById('bgColor').value;
-
-    // Apply the colors
-    document.body.style.color = textColor;
-    document.body.style.backgroundColor = bgColor;
-
-    hideConfigOverlay();
-}
+            const textColor = document.getElementById('textColor').value;
+            const bgColor = document.getElementById('bgColor').value;
+            document.body.style.color = textColor;
+            document.body.style.backgroundColor = bgColor;
+            hideConfigOverlay();
+        }
 
         document.getElementById('loadConfigFile').addEventListener('change', function() {
             const file = this.files[0];
@@ -273,26 +276,22 @@
             }
         });
 
-        function restoreDefaults() {
-    // Set default values
-    document.getElementById('textColor').value = 'white';
-    document.getElementById('bgColor').value = 'black';
-    document.getElementById('timeZone').value = 'America/Los_Angeles';
-    document.getElementById('weatherStation').value = '';
-    document.getElementById('airnowRSS').value = '';
+        function loadInitialConfig() {
+            document.getElementById('textColor').value = getComputedStyle(document.body).getPropertyValue('color').trim();
+            document.getElementById('bgColor').value = getComputedStyle(document.body).getPropertyValue('background-color').trim();
+        }
 
-    // Apply the styles
-    applyConfig();
-}
+        document.querySelectorAll('.preset').forEach(button => {
+            button.addEventListener('click', function() {
+                const textColor = this.getAttribute('data-text-color');
+                const bgColor = this.getAttribute('data-bg-color');
+                
+                document.getElementById('textColor').value = textColor;
+                document.getElementById('bgColor').value = bgColor;
 
-
-
-
-function loadInitialConfig() {
-    document.getElementById('textColor').value = 'white';
-    document.getElementById('bgColor').value = 'black';
-}
-
+                applyConfig();
+            });
+        });
 
         // Event listener to show the configuration overlay on click
         document.body.addEventListener('click', function(event) {
