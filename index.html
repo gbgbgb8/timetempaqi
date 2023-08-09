@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Display</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway+Dots&display=swap">
     <style>
         body {
+            font-family: Arial, sans-serif;
             color: white;
             display: flex;
             justify-content: center;
@@ -15,7 +16,6 @@
             height: 100vh;
             width: 100vw;
             margin: 0;
-            font-family: Arial, sans-serif;
             overflow: hidden;
             background-color: black;
         }
@@ -59,55 +59,74 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            border-radius: 15px;
-            max-width: 500px;
-            margin: auto;
-            padding: 20px;
-            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
-        }
-
-        .config-header {
-            font-weight: bold;
-            font-size: 1.8em;
-            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.75);
+            margin: 10px;
+            overflow-y: auto;
         }
 
         .config-label,
         .config-input,
         .config-select {
-            margin: 10px 0;
-            padding: 5px;
+            margin: 5px;
+            padding: 10px;
             font-size: 1.2em;
-            width: 100%;
+            width: 80%;
             text-align: center;
+            border: 2px solid #555;
+            border-radius: 5px;
         }
 
-        .config-button, .preset-button {
+        .config-button {
             margin: 10px;
             padding: 10px 20px;
             font-size: 1.2em;
             cursor: pointer;
-            background-color: #444;
-            border: none;
+            background-color: #333;
+            border: 2px solid #555;
             color: white;
             border-radius: 5px;
             transition: background-color 0.3s;
         }
 
-        .config-button:hover, .preset-button:hover {
+        .config-button:hover {
             background-color: #555;
         }
 
-        .presets {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            margin-top: 20px;
+        /* File input styling */
+        .file-input {
+            display: none;
         }
 
-        .preset-button {
-            flex: 1;
+        .file-label {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+            background-color: #333;
+            color: white;
+            border: 2px solid #555;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .file-label:hover {
+            background-color: #555;
+        }
+
+        .preset {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
             margin: 5px;
+            cursor: pointer;
+            border: 2px solid #555;
+            border-radius: 5px;
+            transition: border 0.3s;
+        }
+
+        .preset:hover {
+            border: 2px solid #888;
         }
     </style>
 </head>
@@ -122,12 +141,18 @@
 
     <!-- Configuration overlay -->
     <div class="config-overlay" id="configOverlay">
-        <div class="config-header">Configuration</div>
         <label class="config-label" for="textColor">Text Color:</label>
         <input type="color" id="textColor" class="config-input">
         
         <label class="config-label" for="bgColor">Background Color:</label>
         <input type="color" id="bgColor" class="config-input">
+        
+        <label class="config-label" for="fontSelector">Choose Font:</label>
+        <select id="fontSelector" class="config-select">
+            <option value="Arial, sans-serif">Default - Arial</option>
+            <option value="'Raleway Dots', cursive">Raleway Dots</option>
+            <!-- You can add more fonts here -->
+        </select>
 
         <label class="config-label" for="timeZone">Time Zone:</label>
         <select id="timeZone" class="config-select">
@@ -142,15 +167,20 @@
         <input type="text" id="weatherStation" class="config-input" placeholder="WeatherUnderground Station ID">
         <input type="text" id="airnowRSS" class="config-input" placeholder="AirNow RSS link">
 
-        <div class="presets">
-            <button class="preset-button" onclick="applyPreset('#FFFFFF', '#000000')">White on Black</button>
-            <button class="preset-button" onclick="applyPreset('#000000', '#FFFFFF')">Black on White</button>
-            <button class="preset-button" onclick="applyPreset('#000000', '#FFFF00')">Black on Yellow</button>
-            <button class="preset-button" onclick="applyPreset('#FFFF00', '#000000')">Yellow on Black</button>
-            <button class="preset-button" onclick="applyPreset('#FFFFFF', '#FF00FF')">White on Magenta</button>
-            <button class="preset-button" onclick="applyPreset('#FF00FF', '#FFFFFF')">Magenta on White</button>
+        <!-- Preset color combinations -->
+        <div>
+            <div class="preset" style="background-color: black; color: white;" onclick="setPreset('white', 'black')"></div>
+            <div class="preset" style="background-color: white; color: black;" onclick="setPreset('black', 'white')"></div>
+            <div class="preset" style="background-color: blue; color: yellow;" onclick="setPreset('yellow', 'blue')"></div>
+            <div class="preset" style="background-color: green; color: white;" onclick="setPreset('white', 'green')"></div>
+            <div class="preset" style="background-color: red; color: cyan;" onclick="setPreset('cyan', 'red')"></div>
+            <div class="preset" style="background-color: purple; color: orange;" onclick="setPreset('orange', 'purple')"></div>
         </div>
 
+        <!-- File input for loading configuration -->
+        <input type="file" id="loadConfigFile" class="file-input">
+        <label for="loadConfigFile" class="file-label">Load from File</label>
+        <button class="config-button" onclick="saveConfigToFile()">Save to File</button>
         <button class="config-button" onclick="applyConfig()">OK</button>
         <button class="config-button" onclick="hideConfigOverlay()">Cancel</button>
     </div>
@@ -172,8 +202,6 @@
                 timeZone: timeZone
             };
             let formatted = new Intl.DateTimeFormat('en-US', options).format(new Date());
-            
-            // Remove the AM/PM part and leading zero, if any
             formatted = formatted.replace(/ AM| PM/g, '').trim();
             return formatted.startsWith('0') ? formatted.slice(1) : formatted;
         }
@@ -228,28 +256,51 @@
             document.getElementById('configOverlay').style.display = 'none';
         }
 
+        function saveConfigToFile() {
+            const config = {
+                textColor: document.getElementById('textColor').value,
+                bgColor: document.getElementById('bgColor').value,
+                timeZone: document.getElementById('timeZone').value,
+                weatherStation: document.getElementById('weatherStation').value,
+                airnowRSS: document.getElementById('airnowRSS').value
+            };
+
+            const blob = new Blob([JSON.stringify(config)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'tta.config';
+            document.body.appendChild(a);
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
         function applyConfig() {
             const textColor = document.getElementById('textColor').value;
             const bgColor = document.getElementById('bgColor').value;
+            const font = document.getElementById('fontSelector').value;
+            
             document.body.style.color = textColor;
             document.body.style.backgroundColor = bgColor;
+            document.body.style.fontFamily = font;
+
             hideConfigOverlay();
         }
 
-        function applyPreset(textColor, bgColor) {
+        function setPreset(textColor, bgColor) {
             document.getElementById('textColor').value = textColor;
             document.getElementById('bgColor').value = bgColor;
-
-            // Apply the styles immediately
-            document.body.style.color = textColor;
-            document.body.style.backgroundColor = bgColor;
         }
 
         function loadInitialConfig() {
             document.getElementById('textColor').value = getComputedStyle(document.body).getPropertyValue('color').trim();
             document.getElementById('bgColor').value = getComputedStyle(document.body).getPropertyValue('background-color').trim();
+            document.getElementById('fontSelector').value = getComputedStyle(document.body).getPropertyValue('font-family').trim();
         }
 
+        // Event listener to show the configuration overlay on click
         document.body.addEventListener('click', function(event) {
             if (event.target.id !== 'configOverlay' && !event.target.closest('#configOverlay')) {
                 showConfigOverlay();
