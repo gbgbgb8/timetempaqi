@@ -9,13 +9,12 @@ export default async function(req, res) {
         const response = await fetch(url);
         const data = await response.json();
 
-        // Extracting the PM2.5 value from the response
-        // Using 'pm2.5_atm' as it seems to be the relevant field for AQI
-        const pm25Value = data.sensor['pm2.5_atm'];
+        // Correctly extracting the PM2.5 value from the response
+        const pm25Value = data.sensor.pm2_5_atm;
 
-        // Convert PM2.5 value to AQI - This requires a conversion formula
+        // Convert PM2.5 value to AQI
         // For simplicity, we're returning the PM2.5 value directly
-        // You might need to apply a conversion formula here to get the actual AQI
+        // Apply a conversion formula here to get the actual AQI if necessary
         const aqi = pm25Value;
 
         res.status(200).json({ aqi });
