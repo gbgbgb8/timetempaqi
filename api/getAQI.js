@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-let cachedAQI = null;
+let cachedData = { aqi: null, woodsmoke: null };
 let lastFetchTime = 0;
 
 function aqiFromPM(pm) {
@@ -35,14 +35,22 @@ function calcAQI(Cp, Ih, Il, BPh, BPl) {
     return Math.round((a/b) * c + Il);
 }
 
-async function fetchAQIFromAPI(api_key, sensorId) {
+function calculateWoodsmoke(pm25cf1) {
+    return 0.55 * pm25cf1 + 0.53;
+}
+
+async function fetchDataFromAPI(api_key, sensorId) {
     const url = `https://api.purpleair.com/v1/sensors/${sensorId}?api_key=${api_key}`;
     const response = await fetch(url);
     const data = await response.json();
 
-    // Use pm2.5_10minute for AQI calculation
     const pm25Value = data.sensor.stats['pm2.5_10minute'];
-    return aqiFromPM(pm25Value);
+    const pm25cf1Value = data.sensor['pm2.5_cf_1'];
+
+    return {
+        aqi: aqiFromPM(pm25Value),
+        woodsmoke: calculateWoodsmoke(pm25cf1Value)
+    };
 }
 
 export default async function(req, res) {
@@ -50,15 +58,16 @@ export default async function(req, res) {
     const sensorId = 69541; // Sensor ID for Napa, CA
     const currentTime = Date.now();
 
-    if (!cachedAQI || currentTime - lastFetchTime > 300000) {
+    if (!cachedData.aqi || currentTime - lastFetchTime > 300000) {
         try {
-            cachedAQI = await fetchAQIFromAPI(api_key, sensorId);
+            const data = await fetchDataFromAPI(api_key, sensorId);
+            cachedData = data;
             lastFetchTime = currentTime;
         } catch (error) {
-            console.error('Error fetching AQI data:', error);
-            return res.status(500).send('Error fetching AQI data');
+            console.error('Error fetching data:', error);
+            return res.status(500).send('Error fetching data');
         }
     }
 
-    res.status(200).json({ aqi: cachedAQI });
+    res.status(200).json(cachedData);
 }
