@@ -19,7 +19,7 @@ function fetchAQI() {
     return fetch('/api/getAQI')
         .then(response => response.json())
         .then(data => 'AQI: ' + data.aqi)
-        .catch(() => 'AQI: N/A');
+        .catch(() => 'AQI: err');
 }
 
 function rotateDisplay() {
