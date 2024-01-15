@@ -3,8 +3,11 @@ const displayElement = document.getElementById('display');
 function fetchWeather() {
     return fetch('https://api.weather.gov/gridpoints/MTR/94,128/forecast')
         .then(response => response.json())
-        .then(data => data.properties.periods[0].temperature + '°F')
-        .catch(() => 'N/A');
+        .then(data => {
+            const currentPeriod = data.properties.periods[0];
+            return `${currentPeriod.temperature}°${currentPeriod.temperatureUnit}`;
+        })
+        .catch(() => 'Temp: N/A');
 }
 
 function getCurrentTime() {
@@ -12,17 +15,19 @@ function getCurrentTime() {
     return now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 }
 
-// Placeholder function for AQI, since no API is used
-function getAQI() {
-    return 'AQI: N/A';
+function fetchAQI() {
+    return fetch('/api/getAQI')
+        .then(response => response.json())
+        .then(data => 'AQI: ' + data.aqi)
+        .catch(() => 'AQI: N/A');
 }
 
 function rotateDisplay() {
-    const functions = [getCurrentTime, fetchWeather, getAQI];
+    const functions = [getCurrentTime, fetchWeather, fetchAQI];
     let index = 0;
 
     const updateDisplay = async () => {
-        const value = typeof functions[index] === 'function' ? await functions[index]() : functions[index];
+        const value = await functions[index]();
         displayElement.textContent = value;
         index = (index + 1) % functions.length;
     };
