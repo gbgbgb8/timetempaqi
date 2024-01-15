@@ -1,40 +1,34 @@
-const content = document.getElementById('content');
+const displayElement = document.getElementById('display');
 
-async function displayTime() {
+function fetchWeather() {
+    return fetch('https://api.weather.gov/gridpoints/MTR/94,128/forecast')
+        .then(response => response.json())
+        .then(data => data.properties.periods[0].temperature + '°F')
+        .catch(() => 'N/A');
+}
+
+function getCurrentTime() {
     const now = new Date();
-    content.innerHTML = now.toLocaleTimeString();
+    return now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 }
 
-async function fetchData() {
-    try {
-        const response = await fetch('/api/weather');
-        if (!response.ok) throw new Error('Data fetch failed');
-        return await response.json();
-    } catch (error) {
-        console.error('Error:', error);
-        return { temperature: 'Error', aqi: 'Error' };
-    }
+// Placeholder function for AQI, since no API is used
+function getAQI() {
+    return 'AQI: N/A';
 }
 
-async function displayTemperature() {
-    const data = await fetchData();
-    content.innerHTML = `Temperature: ${data.temperature}°F`;
-}
-
-async function displayAQI() {
-    const data = await fetchData();
-    content.innerHTML = `AQI: ${data.aqi}`;
-}
-
-async function rotateDisplay() {
-    let functions = [displayTime, displayTemperature, displayAQI];
+function rotateDisplay() {
+    const functions = [getCurrentTime, fetchWeather, getAQI];
     let index = 0;
 
-    await functions[index]();
-    setInterval(async () => {
+    const updateDisplay = async () => {
+        const value = typeof functions[index] === 'function' ? await functions[index]() : functions[index];
+        displayElement.textContent = value;
         index = (index + 1) % functions.length;
-        await functions[index]();
-    }, 4000);
+    };
+
+    updateDisplay();
+    setInterval(updateDisplay, 4000);
 }
 
-document.addEventListener('DOMContentLoaded', rotateDisplay);
+rotateDisplay();
