@@ -1,0 +1,15 @@
+{
+    "name": "time-temp-aqi-display",
+    "version": "1.0.0",
+    "description": "A web application to display time, temperature, and air quality index.",
+    "main": "index.js",
+    "scripts": {
+      "start": "node index.js"
+    },
+    "dependencies": {
+      "node-fetch": "^2.6.7"
+    },
+    "author": "",
+    "license": "ISC"
+  }
+  
