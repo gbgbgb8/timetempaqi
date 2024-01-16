@@ -10,7 +10,7 @@ body, html {
 }
 
 .display {
-    font-size: 100vw; /* Adjust size as needed for visibility */
+    font-size: 25vw; /* Adjust size as needed for visibility */
     color: white;
     font-family: 'Overpass Mono', monospace;
     text-align: center;
