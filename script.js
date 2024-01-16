@@ -12,13 +12,24 @@ function fetchWeather() {
 
 function getCurrentTime() {
     const now = new Date();
-    return now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    let hours = now.getHours();
+    const minutes = now.getMinutes();
+    
+    // Convert hours from 24-hour to 12-hour format and remove leading zero if any
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+
+    // Add leading zero to minutes if less than 10
+    const minutesFormatted = minutes < 10 ? '0' + minutes : minutes;
+
+    return hours + ':' + minutesFormatted;
 }
+
 
 function fetchAQI() {
     return fetch('/api/getAQI')
         .then(response => response.json())
-        .then(data => 'AQI: ' + data.aqi)
+        .then(data => 'AQI ' + data.aqi)
         .catch(() => 'AQI: N/A');
 }
 
