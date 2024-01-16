@@ -1,14 +1,31 @@
 const displayElement = document.getElementById('display');
 
-function fetchWeather() {
-    return fetch('https://api.weather.gov/gridpoints/MTR/94,128/forecast')
-        .then(response => response.json())
-        .then(data => {
+async function fetchWeather() {
+    const url = 'https://api.weather.gov/gridpoints/MTR/94,128/forecast';
+    const maxRetries = 3;
+    let attempts = 0;
+
+    while (attempts < maxRetries) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('Response not OK');
+            }
+            const data = await response.json();
             const currentPeriod = data.properties.periods[0];
             return `${currentPeriod.temperature}°${currentPeriod.temperatureUnit}`;
-        })
-        .catch(() => 'Temp: N/A');
+        } catch (error) {
+            console.error('Error fetching weather:', error);
+            attempts++;
+            if (attempts >= maxRetries) {
+                return 'Temp: N/A';
+            }
+            // Wait 2 seconds before retrying
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+    }
 }
+
 
 function getCurrentTime() {
     const now = new Date();
