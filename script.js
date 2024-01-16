@@ -56,9 +56,9 @@ function rotateDisplay() {
 
     const updateDisplay = async () => {
         const value = await functions[index]();
-        displayElement.textContent = value;
+        displayElement.innerHTML = value; // Use innerHTML to render HTML correctly
         index = (index + 1) % functions.length;
-    };
+    };    
 
     updateDisplay();
     setInterval(updateDisplay, 4000);
