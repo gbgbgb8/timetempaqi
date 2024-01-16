@@ -46,8 +46,8 @@ function getCurrentTime() {
 function fetchAQI() {
     return fetch('/api/getAQI')
         .then(response => response.json())
-        .then(data => 'AQI ' + data.aqi)
-        .catch(() => 'AQI: N/A');
+        .then(data => data.aqi + '<br>AQI')
+        .catch(() => 'AQI: <br>N/A');
 }
 
 function rotateDisplay() {
