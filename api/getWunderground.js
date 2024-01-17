@@ -11,12 +11,9 @@ const getWundergroundData = async (req, res) => {
             throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        
-        // Extract the temperature data from the response
         const temperature = data.observations[0].imperial.temp;
 
-        // Send the temperature data back as a JSON response
-        res.status(200).json({ temperature: `${temperature}°F` });
+        res.status(200).json({ temperature: `${temperature}°` });
     } catch (error) {
         console.error('Error fetching data from Weather Underground:', error);
         res.status(500).send('Error fetching weather data');
