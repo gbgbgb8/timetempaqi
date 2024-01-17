@@ -2,7 +2,7 @@ const displayElement = document.getElementById('display');
 
 async function fetchWeather() {
     try {
-        const response = await fetch('/api/weather');
+        const response = await fetch('/api/getWunderground');
         if (!response.ok) {
             throw new Error('Response not OK');
         }
