@@ -1,27 +1,17 @@
 const displayElement = document.getElementById('display');
 
 async function fetchWeather() {
-    const url = 'https://api.weather.gov/gridpoints/MTR/94,128/forecast';
-    const maxRetries = 3;
-    let attempts = 0;
-
-    while (attempts < maxRetries) {
-        try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error('Response not OK');
-            }
-            const data = await response.json();
-            const currentPeriod = data.properties.periods[0];
-            return `${currentPeriod.temperature}°${currentPeriod.temperatureUnit}`;
-        } catch (error) {
-            console.error('Error fetching weather:', error);
-            attempts++;
-            if (attempts >= maxRetries) {
-                return 'Temp: N/A';
-            }
-            await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+        const response = await fetch('/api/weather');
+        if (!response.ok) {
+            throw new Error('Response not OK');
         }
+        const data = await response.json();
+        // Assuming data contains a temperature field
+        return `${data.temperature}°F`;  // Modify according to actual response structure
+    } catch (error) {
+        console.error('Error fetching weather:', error);
+        return 'Temp: N/A';
     }
 }
 
@@ -29,7 +19,7 @@ function getCurrentTime() {
     const now = new Date();
     let hours = now.getHours();
     const minutes = now.getMinutes();
-    
+
     hours = hours % 12;
     hours = hours ? hours : 12;
 
@@ -85,21 +75,20 @@ document.getElementById('settingsForm').addEventListener('submit', function(even
 });
 
 function loadSettings() {
-    const
-settings = JSON.parse(localStorage.getItem('displaySettings'));
-if (settings) {
-document.getElementById('sensorId').value = settings.sensorId || '';
-document.getElementById('bgColor').value = settings.bgColor || '#000000';
-applySettings();
-}
+    const settings = JSON.parse(localStorage.getItem('displaySettings'));
+    if (settings) {
+        document.getElementById('sensorId').value = settings.sensorId || '';
+        document.getElementById('bgColor').value = settings.bgColor || '#000000';
+        applySettings();
+    }
 }
 
 function applySettings() {
-const settings = JSON.parse(localStorage.getItem('displaySettings'));
-if (settings) {
-document.body.style.backgroundColor = settings.bgColor || '#000000';
-// Apply other settings as needed
-}
+    const settings = JSON.parse(localStorage.getItem('displaySettings'));
+    if (settings) {
+        document.body.style.backgroundColor = settings.bgColor || '#000000';
+        // Apply other settings as needed
+    }
 }
 
 // Call loadSettings on page load
