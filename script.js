@@ -8,7 +8,7 @@ async function fetchWeather() {
         }
         const data = await response.json();
         // Assuming data contains a temperature field
-        return `${data.temperature}°F`;  // Modify according to actual response structure
+        return `${data.temperature}`;  // Modify according to actual response structure
     } catch (error) {
         console.error('Error fetching weather:', error);
         return 'Temp: N/A';
