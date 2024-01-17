@@ -37,13 +37,41 @@ Notes
    - Users can save their settings to a JSON file. This includes sensor ID, background color, font color, text size, rotation time, and custom text.
    - Users can load settings from a saved JSON file to quickly apply their preferred configuration.
 
-6. **Additional Ideas for Enhancement:**
-   - **Weather Icons:** Display weather icons alongside temperature for a more intuitive presentation.
-   - **Multiple Language Support:** Offer multilingual support for the displayed text (time, temperature, AQI, and custom text).
-   - **Screen Brightness Control:** Include an option to adjust the brightness of the display, particularly useful for different lighting conditions.
-   - **Display Layout Options:** Provide different layout templates for how the time, temperature, AQI, and custom text are arranged on the screen.
-   - **Touchscreen Interactivity (for Kiosks):** If used on touchscreen devices, enable interactive elements like swiping between different display elements instead of automatic rotation.
-   - **Accessibility Features:** Implement accessibility features like screen reader support and high-contrast mode for visually impaired users.
 
 ### Summary:
 Your web application serves as an informative display tool that shows time, temperature, and AQI, ideal for business windows or public information screens. The planned enhancements will transform it into a highly customizable and user-friendly tool, catering to various user needs and preferences, making it versatile for both personal and commercial use. These features will significantly increase the application's usability and appeal.
+---
+
+### Updated Notes (`notes.md`)
+
+#### Session Progress:
+
+- **Web Application Overview:**
+  - The application displays time, temperature, and Air Quality Index (AQI).
+  - Features a responsive full-screen display with a minimalist design.
+
+- **Implemented Features:**
+  - **Time Display:** Shows current time in 12-hour format without leading zeros.
+  - **Temperature Display:** Fetches and shows temperature from Weather.gov API for Napa, CA.
+  - **AQI Display:** Retrieves AQI from the PurpleAir API using a specific sensor ID. Displays AQI value and "AQI" text on separate lines.
+  - **Display Rotation:** Rotates between time, temperature, and AQI every 4 seconds.
+  - **Floating Action Button (FAB):** A gear icon button for accessing settings.
+  - **Settings Modal:** A modal that opens via the FAB, allowing users to change settings like sensor ID and background color.
+  - **Local Storage:** Settings can be saved to and loaded from the browser's local storage.
+
+- **Styling:**
+  - Uses 'Overpass Mono' font from Google Fonts.
+  - Main display text fills the entire screen window.
+  - Background color is black, and font color is white.
+
+#### Next Steps:
+
+- **Refactoring `script.js`:**
+  - Plan to split functions within `script.js` into their own separate files for better code organization and maintainability.
+  - Create individual files for `getCurrentTime` and `fetchWeather` functions, similar to the existing `api/getAQI.js`.
+  - This will modularize the codebase, making it easier to manage and update individual functionalities.
+
+
+---
+
+This updated document outlines your current progress and provides a roadmap for future development. The next session will focus on refactoring the JavaScript code to improve structure and maintainability.
