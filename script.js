@@ -20,28 +20,23 @@ async function fetchWeather() {
             if (attempts >= maxRetries) {
                 return 'Temp: N/A';
             }
-            // Wait 2 seconds before retrying
             await new Promise(resolve => setTimeout(resolve, 2000));
         }
     }
 }
-
 
 function getCurrentTime() {
     const now = new Date();
     let hours = now.getHours();
     const minutes = now.getMinutes();
     
-    // Convert hours from 24-hour to 12-hour format and remove leading zero if any
     hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
+    hours = hours ? hours : 12;
 
-    // Add leading zero to minutes if less than 10
     const minutesFormatted = minutes < 10 ? '0' + minutes : minutes;
 
     return hours + ':' + minutesFormatted;
 }
-
 
 function fetchAQI() {
     return fetch('/api/getAQI')
@@ -56,12 +51,56 @@ function rotateDisplay() {
 
     const updateDisplay = async () => {
         const value = await functions[index]();
-        displayElement.innerHTML = value; // Use innerHTML to render HTML correctly
+        displayElement.innerHTML = value;
         index = (index + 1) % functions.length;
-    };    
+    };
 
     updateDisplay();
     setInterval(updateDisplay, 4000);
 }
 
 rotateDisplay();
+
+// Settings Button and Modal
+document.getElementById('settingsButton').addEventListener('click', function() {
+    document.getElementById('settingsMenu').style.display = 'block';
+});
+
+document.querySelector('.close-button').addEventListener('click', function() {
+    document.getElementById('settingsMenu').style.display = 'none';
+});
+
+document.getElementById('settingsForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const settings = {
+        sensorId: document.getElementById('sensorId').value,
+        bgColor: document.getElementById('bgColor').value,
+        // Other settings can be added here
+    };
+
+    localStorage.setItem('displaySettings', JSON.stringify(settings));
+    applySettings();
+    document.getElementById('settingsMenu').style.display = 'none';
+});
+
+function loadSettings() {
+    const
+settings = JSON.parse(localStorage.getItem('displaySettings'));
+if (settings) {
+document.getElementById('sensorId').value = settings.sensorId || '';
+document.getElementById('bgColor').value = settings.bgColor || '#000000';
+applySettings();
+}
+}
+
+function applySettings() {
+const settings = JSON.parse(localStorage.getItem('displaySettings'));
+if (settings) {
+document.body.style.backgroundColor = settings.bgColor || '#000000';
+// Apply other settings as needed
+}
+}
+
+// Call loadSettings on page load
+loadSettings();

@@ -1,7 +1,5 @@
 Notes
 
-Certainly! Below is a detailed write-up of your web application's current functionality and a plan for future enhancements:
-
 ### Current Functionality:
 1. **Time, Temperature, and AQI Display:**
    - The application currently displays the time, temperature, and Air Quality Index (AQI).

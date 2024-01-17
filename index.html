@@ -9,6 +9,25 @@
 </head>
 <body>
     <div id="display" class="display"></div>
+    <button id="settingsButton" class="fab"><i class="gear-icon">⚙️</i></button>
+    
+    <div id="settingsMenu" class="settings-modal">
+        <div class="settings-content">
+            <span class="close-button">&times;</span>
+            <form id="settingsForm">
+                <label for="sensorId">Sensor ID:</label>
+                <input type="text" id="sensorId" name="sensorId"><br>
+
+                <label for="bgColor">Background Color:</label>
+                <input type="color" id="bgColor" name="bgColor"><br>
+
+                <!-- Add more form elements for other settings here -->
+
+                <button type="submit">Save Settings</button>
+            </form>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
