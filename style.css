@@ -43,7 +43,7 @@ body, html {
 }
 
 .settings-modal {
-    display: none; /* Hidden by default */
+    display: none;
     position: fixed;
     left: 0;
     top: 0;
@@ -75,7 +75,6 @@ body, html {
     cursor: pointer;
 }
 
-/* Additional styles for form elements in settings modal */
 #settingsForm label, 
 #settingsForm input, 
 #settingsForm button {

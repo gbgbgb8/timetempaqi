@@ -55,7 +55,7 @@ async function fetchDataFromAPI(api_key, sensorId) {
 
 export default async function(req, res) {
     const api_key = process.env.PURPLEAIR_API_KEY;
-    const sensorId = 69541; // Sensor ID for Napa, CA
+    const sensorId = 69541;
     const currentTime = Date.now();
 
     if (!cachedData.aqi || currentTime - lastFetchTime > 300000) {
