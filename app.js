@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const importFileInput = document.getElementById('importFile');
     const testWeatherBtn = document.getElementById('testWeather');
     const testAQIBtn = document.getElementById('testAQI');
+    const fontSizeSlider = document.getElementById('fontSizeSlider');
 
     let currentDisplay = 0;
     const displayDuration = 4000;
@@ -77,6 +78,13 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => alert('AQI API Test Failed: ' + error));
     });
 
+    fontSizeSlider.addEventListener('input', () => {
+        const displayDivs = document.querySelectorAll('.display');
+        displayDivs.forEach(div => {
+            div.style.fontSize = fontSizeSlider.value + 'em';
+        });
+    });
+
     function getCachedDataAndUpdateDisplay(cacheKey, displayElement, fetchDataFunction, apiKey, id) {
         const cachedData = getCachedData(cacheKey);
         if (cachedData) {
@@ -118,3 +126,4 @@ document.addEventListener('DOMContentLoaded', () => {
         getCachedDataAndUpdateDisplay('aqiData', aqiDisplay, fetchAQIData, document.getElementById('purpleAirApiKey').value, document.getElementById('purpleAirSensorId').value);
     }
 });
+
