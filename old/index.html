@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time, Temperature, and AQI Display</title>
+    <link href="https://fonts.googleapis.com/css2?family=Overpass+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="display" class="display"></div>
+    <button id="settingsButton" class="fab"><i class="gear-icon">⚙️</i></button>
+    
+    <div id="settingsMenu" class="settings-modal">
+        <div class="settings-content">
+            <span class="close-button">&times;</span>
+            <form id="settingsForm">
+                <label for="sensorId">Sensor ID:</label>
+                <input type="text" id="sensorId" name="sensorId"><br>
+                <label for="bgColor">Background Color:</label>
+                <input type="color" id="bgColor" name="bgColor"><br>
+                <button type="submit">Save Settings</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="settingsHandler.js"></script>
+</body>
+</html>

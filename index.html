@@ -3,28 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Time, Temperature, and AQI Display</title>
-    <link href="https://fonts.googleapis.com/css2?family=Overpass+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <title>Environmental Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="display" class="display"></div>
-    <button id="settingsButton" class="fab"><i class="gear-icon">⚙️</i></button>
-    
-    <div id="settingsMenu" class="settings-modal">
-        <div class="settings-content">
-            <span class="close-button">&times;</span>
-            <form id="settingsForm">
-                <label for="sensorId">Sensor ID:</label>
-                <input type="text" id="sensorId" name="sensorId"><br>
-                <label for="bgColor">Background Color:</label>
-                <input type="color" id="bgColor" name="bgColor"><br>
-                <button type="submit">Save Settings</button>
-            </form>
-        </div>
+    <div id="display" class="display">
+        <div id="time" class="time"></div>
+        <div id="temperature" class="temperature"></div>
+        <div id="aqi" class="aqi"></div>
     </div>
 
-    <script src="script.js"></script>
-    <script src="settingsHandler.js"></script>
+    <div class="settings">
+        <input type="text" id="wundergroundApiKey" placeholder="WeatherUnderground API Key">
+        <input type="text" id="wundergroundStationId" placeholder="Station ID">
+        <button id="testWeather">Test Weather API</button>
+
+        <input type="text" id="purpleAirApiKey" placeholder="PurpleAir API Key">
+        <input type="text" id="purpleAirSensorId" placeholder="Sensor ID">
+        <button id="testAQI">Test AQI API</button>
+
+        <button id="exportSettings">Export Settings</button>
+        <button id="importSettings">Import Settings</button>
+        <button id="applySettings">Apply Settings</button>
+        <input type="file" id="importFile" hidden>
+    </div>
+
+    <script type="module" src="app.js"></script>
 </body>
 </html>
